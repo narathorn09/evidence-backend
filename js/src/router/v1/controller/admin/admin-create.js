@@ -8,7 +8,7 @@ const responseError_1 = __importDefault(require("../../components/responseError"
 const bcrypt = require("bcrypt");
 const CreateAdmin = (req, res, next) => {
     try {
-        const { admin_fname, admin_lname, username, password } = req.query;
+        const { admin_fname, admin_lname, username, password } = req.body;
         const SALT_ROUNDS = 10;
         bcrypt.hash(password, SALT_ROUNDS, (err, hash) => {
             if (err) {

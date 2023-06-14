@@ -9,7 +9,7 @@ const CreateAdmin = (
   next: NextFunction
 ) => {
   try {
-    const { admin_fname, admin_lname, username, password } = req.query;
+    const { admin_fname, admin_lname, username, password } = req.body;
     const SALT_ROUNDS = 10;
     bcrypt.hash(password, SALT_ROUNDS, (err: any, hash: any) => {
       if (err) {
