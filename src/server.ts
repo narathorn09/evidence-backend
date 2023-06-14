@@ -1,52 +1,31 @@
-import config from "config";
 import express, { Application, Request, Response, NextFunction } from "express";
-const mysql = require("mysql2");
+import { createServer, Server } from "http";
+import { corsOptions } from "../config/corsOptions";
+import { mysqlDB } from "./db/mysql";
+import routerv1 from "./router/v1/router";
+const chalk = require("chalk");
 const cors = require("cors");
-const port = config.get("app.port");
+const {
+  server: { port },
+} = require("config");
+
 const app: Application = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "1234",
-  database: "Forensic_Science",
-});
-db.connect();
-
+mysqlDB.connect();
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.send("Hello, Narathorn Nooasdphum");
+  res.send("Hello, API For Express & MySQL");
 });
+app.use("/api/v1/", routerv1);
+const httpServer: Server = createServer(app);
 
-app.post(
-  "/create-member",
-  (req: Request, res: Response, next: NextFunction) => {
-    const { id, role, username, password } = req.query;
-    const query =
-      "INSERT INTO Member (mem_id, mem_type, mem_username, mem_password) VALUES (?, ?, ?, ?)";
-    const data = [id, role, username, password];
-    db.query(query, data, (err: any, result: any) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(result);
-      }
-    });
-  }
-);
-
-app.get("/member", (req: Request, res: Response, next: NextFunction) => {
-  const query = "Select * from member";
-  db.query(query, (err: any, result: any) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
-    }
-  });
-});
-
-app.listen(port as number, () => {
-  console.log(`Rest API is now running on http://localhost:${port}`);
+httpServer.listen(port as number, () => {
+  console.log(
+    chalk.bgHex(`#009e41`).bold(
+      `\n------------------------------------------------------------------------------
+            Rest API is now running on http://localhost:${port}                  
+------------------------------------------------------------------------------\n`
+    )
+  );
 });
