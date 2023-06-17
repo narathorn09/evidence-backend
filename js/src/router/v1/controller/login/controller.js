@@ -84,7 +84,7 @@ const Login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
                             console.log(err);
                             return res.sendStatus(500);
                         }
-                        console.log(result);
+                        // console.log(result);
                         // ############################################  for https
                         res.cookie("refresh", newRefreshToken, {
                             httpOnly: true,

@@ -89,7 +89,7 @@ const Login = async (req: Request, res: Response, next: NextFunction) => {
               console.log(err);
               return res.sendStatus(500);
             }
-            console.log(result);
+            // console.log(result);
             // ############################################  for https
             res.cookie("refresh", newRefreshToken, {
               httpOnly: true,
