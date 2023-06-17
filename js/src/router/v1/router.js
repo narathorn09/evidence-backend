@@ -8,7 +8,11 @@ const member_delete_1 = __importDefault(require("./controller/admin/member-delet
 const admin_create_1 = __importDefault(require("./controller/admin/admin-create"));
 const admin_list_1 = __importDefault(require("./controller/admin/admin-list"));
 const admin_getbyid_1 = __importDefault(require("./controller/admin/admin-getbyid"));
+const controller_1 = __importDefault(require("./controller/login/controller"));
+const controller_2 = __importDefault(require("./controller/logout/controller"));
 const routerv1 = (0, express_1.Router)();
+routerv1.route("/login").post(controller_1.default);
+routerv1.route("/logout").get(controller_2.default);
 routerv1.route("/admin").post(admin_create_1.default).get(admin_list_1.default);
 routerv1.route("/adminById").get(admin_getbyid_1.default);
 routerv1.route("/memberById/:memId").delete(member_delete_1.default);

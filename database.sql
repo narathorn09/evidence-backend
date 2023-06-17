@@ -7,6 +7,7 @@ CREATE TABLE Member (
     mem_type CHAR(1) NOT NULL,
     mem_username VARCHAR(20) NOT NULL,
     mem_password VARCHAR(255) NOT NULL,
+    refreshToken JSON,
     PRIMARY KEY (mem_id)
 );
 

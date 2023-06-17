@@ -3,15 +3,11 @@ import { mysqlDB } from "../../../../db/mysql";
 import ResponseError from "../../components/responseError";
 const bcrypt = require("bcrypt");
 
-const CreateAdmin = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const CreateAdmin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { admin_fname, admin_lname, username, password } = req.body;
     const SALT_ROUNDS = 10;
-    bcrypt.hash(password, SALT_ROUNDS, (err: any, hash: any) => {
+     await bcrypt.hash(password, SALT_ROUNDS, (err: any, hash: any) => {
       if (err) {
         console.log(err);
         res.status(500).json({
@@ -20,7 +16,7 @@ const CreateAdmin = (
         });
         return;
       }
-      mysqlDB.beginTransaction((err: any) => {
+       mysqlDB.beginTransaction((err: any) => {
         if (err) {
           console.log(err);
           res.status(500).json({
