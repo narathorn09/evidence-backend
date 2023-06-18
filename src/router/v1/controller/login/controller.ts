@@ -96,6 +96,7 @@ const Login = async (req: Request, res: Response, next: NextFunction) => {
               secure: true,
               sameSite: "none",
               maxAge: 24 * 60 * 60 * 1000,
+             
             });
 
             //    res.cookie("refresh", newRefreshToken, {
@@ -109,7 +110,7 @@ const Login = async (req: Request, res: Response, next: NextFunction) => {
               
 
 
-            res.json({ mem_type, accessToken });
+            res.status(200).json({ mem_type, accessToken });
           });
         } else {
           return res.status(401).send("Invalid password");

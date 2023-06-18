@@ -100,7 +100,7 @@ const Login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
                         //      domain: "localhost",
                         //      path: "/",
                         //    });
-                        res.json({ mem_type, accessToken });
+                        res.status(200).json({ mem_type, accessToken });
                     });
                 }
                 else {
