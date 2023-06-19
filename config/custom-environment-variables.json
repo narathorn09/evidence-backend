@@ -1,0 +1,14 @@
+{
+  "server": {
+    "port": "PORT"
+  },
+  "db": {
+    "db_host": "DB_HOST",
+    "db_user": "DB_USER",
+    "db_pass": "DB_PASSWORD",
+    "db_name": "DB_DATABASE"
+  },
+   "jwt": {
+    "secret": "JWT_SECRET"
+  }
+}
