@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const auth_1 = __importDefault(require("./auth/auth"));
+const auth_1 = __importDefault(require("./middleware/auth"));
 const member_delete_1 = __importDefault(require("./controller/admin/member-delete"));
 const admin_create_1 = __importDefault(require("./controller/admin/admin-create"));
 const admin_list_1 = __importDefault(require("./controller/admin/admin-list"));

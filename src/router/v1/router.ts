@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import Auth from "./auth/auth";
+import Auth from "./middleware/auth";
 import DeleteMember from "./controller/admin/member-delete";
 import CreateAdmin from "./controller/admin/admin-create";
 import ListAdmin from "./controller/admin/admin-list";
