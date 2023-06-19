@@ -19,10 +19,9 @@ const bcrypt = require("bcrypt");
 const Login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cookies = req.cookies;
-        // console.log(`cookie available at login: ${JSON.stringify(cookies)}`);
         const { username, password } = req.body;
-        const query = `SELECT * FROM Member WHERE mem_username = '${username}'`;
-        mysql_1.mysqlDB.query(query, (err, resultMem) => {
+        const query = `SELECT * FROM Member WHERE mem_username = ?`;
+        mysql_1.mysqlDB.query(query, [username], (err, resultMem) => __awaiter(void 0, void 0, void 0, function* () {
             if (err) {
                 console.log(err);
                 return res.status(400).json({
@@ -33,9 +32,10 @@ const Login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             if (resultMem.length === 0) {
                 return res.status(401).send({ message: "Invalid username" });
             }
-            const { mem_id, mem_type, mem_username, mem_password, refreshToken: reToken, } = resultMem[0];
-            bcrypt.compare(password, mem_password, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
-                if (result) {
+            const { mem_id, mem_type, mem_username, mem_password } = resultMem[0];
+            try {
+                const passwordMatch = yield bcrypt.compareSync(password, mem_password);
+                if (passwordMatch) {
                     const accessToken = yield (0, jwtSign_1.jwtSign)({
                         id: mem_id,
                         role: mem_type,
@@ -46,76 +46,63 @@ const Login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
                         role: mem_type,
                         username: mem_username,
                     }, "1d");
-                    //   let newRefreshTokenArray = !cookies?.refresh
-                    //     ? reToken
-                    //     : reToken.filter((rt: any) => rt !== cookies.refresh);
-                    let newRefreshTokenArray = [];
-                    if (Array.isArray(reToken)) {
-                        newRefreshTokenArray = !(cookies === null || cookies === void 0 ? void 0 : cookies.refresh)
-                            ? reToken
-                            : reToken.filter((rt) => rt !== cookies.refresh);
-                    }
-                    else {
-                        newRefreshTokenArray = [];
-                    }
-                    if (cookies === null || cookies === void 0 ? void 0 : cookies.refresh) {
-                        const refreshToken = cookies.refresh;
-                        const queryToken = `SELECT * FROM Member WHERE refreshToken = '${refreshToken}'`;
-                        mysql_1.mysqlDB.query(queryToken, (err, resultToken) => __awaiter(void 0, void 0, void 0, function* () {
-                            if (err) {
-                                console.log(err);
-                                return res.sendStatus(500);
-                            }
-                            if (resultToken.length === 0) {
-                                console.log("attempted refresh token reuse at login!");
-                                newRefreshTokenArray = [];
-                            }
-                            res.clearCookie("refresh", {
-                                httpOnly: true,
-                                sameSite: "none",
-                                secure: true,
-                            });
-                        }));
-                    }
-                    const updateRefreshToken = [...newRefreshTokenArray, newRefreshToken];
-                    const updateQuery = `UPDATE Member SET refreshToken = '${JSON.stringify(updateRefreshToken)}' WHERE mem_id = '${mem_id}'`;
-                    mysql_1.mysqlDB.query(updateQuery, (err, result) => {
+                    const findTokenQuery = `SELECT * FROM RefreshToken WHERE mem_id = ?`;
+                    mysql_1.mysqlDB.query(findTokenQuery, [mem_id], (err, result) => {
                         if (err) {
                             console.log(err);
-                            return res.sendStatus(500);
+                            return res.status(500).json({
+                                status: "500",
+                                message: "Error querying RefreshToken from db",
+                            });
                         }
-                        // console.log(result);
-                        // ############################################  for https
-                        res.cookie("refresh", newRefreshToken, {
-                            httpOnly: true,
-                            secure: true,
-                            sameSite: "none",
-                            maxAge: 24 * 60 * 60 * 1000,
-                        });
-                        // ############################################  for test localhost
-                        // res.cookie("refresh", newRefreshToken, {
-                        //   httpOnly: false,
-                        //   secure: true,
-                        //   sameSite: "none",
-                        //   maxAge: 24 * 60 * 60 * 1000,
-                        //   domain: "localhost",
-                        // });
-                        // ############################################  for test IPv4
-                        // res.cookie("refresh", newRefreshToken, {
-                        //   httpOnly: false,
-                        //   secure: false,
-                        //   sameSite: "strict",
-                        //   maxAge: 24 * 60 * 60 * 1000,
-                        //   domain: "172.22.118.24",
-                        // });
-                        res.status(200).json({ mem_type, accessToken });
+                        if (result.length > 0) {
+                            const updateQuery = `UPDATE RefreshToken SET refresh_token = ?, createdAt = CURRENT_TIMESTAMP(2) WHERE mem_id = ?`;
+                            mysql_1.mysqlDB.query(updateQuery, [newRefreshToken, mem_id], (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                    return res.status(500).json({
+                                        status: "500",
+                                        message: "Error updating RefreshToken in db",
+                                    });
+                                }
+                                console.log("UPDATE RefreshToken");
+                            });
+                        }
+                        else {
+                            const insertTokenQuery = "INSERT INTO RefreshToken (mem_id, refresh_token, createdAt) VALUES (?, ?, CURRENT_TIMESTAMP(2))";
+                            mysql_1.mysqlDB.query(insertTokenQuery, [mem_id, newRefreshToken], (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                    return res.status(500).json({
+                                        status: "500",
+                                        message: "Error inserting RefreshToken into db",
+                                    });
+                                }
+                                console.log("INSERT RefreshToken");
+                            });
+                        }
                     });
+                    // Set refresh token as a secure HTTP-only cookie
+                    res.cookie("refresh", newRefreshToken, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none",
+                        maxAge: 24 * 60 * 60 * 1000,
+                    });
+                    return res.status(200).json({ mem_type, accessToken });
                 }
                 else {
                     return res.status(401).send("Invalid password");
                 }
-            }));
-        });
+            }
+            catch (err) {
+                console.log(err);
+                return res.status(500).json({
+                    status: "500",
+                    message: "Error comparing passwords",
+                });
+            }
+        }));
     }
     catch (err) {
         (0, responseError_1.default)(err, res);

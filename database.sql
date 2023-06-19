@@ -4,11 +4,20 @@ USE Forensic_Science;
 
 CREATE TABLE Member (
     mem_id INT AUTO_INCREMENT,
-    mem_type CHAR(1) NOT NULL,
+    mem_type ENUM('0', '1', '2', '3', '4') NOT NULL,
     mem_username VARCHAR(20) NOT NULL,
     mem_password VARCHAR(255) NOT NULL,
-    refreshToken JSON,
-    PRIMARY KEY (mem_id)
+    PRIMARY KEY (mem_id),
+    UNIQUE KEY mem_username_unique (mem_username)
+);
+
+CREATE TABLE RefreshToken (
+    token_id INT AUTO_INCREMENT,
+    mem_id INT,
+    refresh_token VARCHAR(1000) NULL,
+    createdAt TIMESTAMP(2) NULL,
+    PRIMARY KEY (token_id),
+    FOREIGN KEY (mem_id) REFERENCES Member(mem_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Commander (

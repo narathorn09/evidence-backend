@@ -24,95 +24,120 @@ const HandleAccessToken = async (
     }
     const refreshToken = cookies.refresh;
 
-    const query = `SELECT * FROM Member WHERE JSON_CONTAINS(refreshToken, '"${refreshToken}"', '$')`;
-    mysqlDB.query(query, async (err: any, resultMember: any) => {
-      if (err) {
-        console.log(err);
-        return res.sendStatus(500);
-      }
+    const query = `SELECT * FROM RefreshToken WHERE refresh_token = ?`;
+    mysqlDB.query(
+      query,
+      [refreshToken],
+      async (err: any, resultMember: any) => {
+        if (err) {
+          console.log(err);
+          return res.sendStatus(500);
+        }
 
-      if (resultMember.length === 0) {
-        jwt.verify(refreshToken, secret, async (err: any, decoded: any) => {
-          if (err) {
+        if (resultMember.length === 0) {
+          try {
+            const decoded = jwt.verify(refreshToken, secret);
+            console.log("attempted refresh token reuse!");
+            const hackedUserQuery = `SELECT * FROM Member WHERE mem_username = '${decoded.username}'`;
+            mysqlDB.query(
+              hackedUserQuery,
+              async (err: any, resultHackedUser: any) => {
+                if (err) {
+                  console.log(err);
+                  return res.sendStatus(500);
+                }
+                if (resultHackedUser.length > 0) {
+                  const { mem_id, mem_type, mem_username, mem_password } =
+                    resultHackedUser[0];
+                  const updateQuery = `UPDATE RefreshToken SET refresh_token = ? WHERE mem_id = ?`;
+                  mysqlDB.query(
+                    updateQuery,
+                    [null, mem_id],
+                    (err: any, result: any) => {
+                      if (err) {
+                        console.log(err);
+                        return res.sendStatus(500);
+                      }
+                      console.log(result);
+                    }
+                  );
+                }
+              }
+            );
+            return res.status(403).json({
+              status: 403,
+              code: "Forbidden",
+              message: "Forbidden",
+            });
+          } catch (err) {
             return res.status(403).json({
               status: 403,
               code: "Forbidden",
               message: "Forbidden",
             });
           }
-          console.log("attempted refresh token reuse!");
-          const hackedUserQuery = `SELECT * FROM Member WHERE mem_username = '${decoded.username}'`;
-          mysqlDB.query(
-            hackedUserQuery,
-            async (err: any, resultHackedUser: any) => {
-              if (err) {
-                console.log(err);
-                return res.sendStatus(500);
-              }
-              if (resultHackedUser.length > 0) {
-                const hackedUser = resultHackedUser[0];
-                hackedUser.refreshToken = [];
-                const updateQuery = `UPDATE User SET refreshToken = '${JSON.stringify(
-                  hackedUser.refreshToken
-                )}' WHERE mem_id = '${hackedUser.mem_id}'`;
-                mysqlDB.query(updateQuery, (err: any, result: any) => {
-                  if (err) {
-                    console.log(err);
-                    return res.sendStatus(500);
-                  }
-                  console.log(result);
-                });
-              }
-            }
-          );
-          return res.status(403).json({
-            status: 403,
-            code: "Forbidden",
-            message: "Forbidden",
-          });
-        });
-      }
+        }
 
-      const foundMember = resultMember[0];
-      const newRefreshTokenArray = foundMember.refreshToken.filter(
-        (rt: any) => rt !== refreshToken
-      );
+        const { mem_id } = resultMember[0];
 
-      jwt.verify(refreshToken, secret, async (err: any, decoded: any) => {
-        if (err) {
-          console.log("expired refresh token");
-          const updateQuery = `UPDATE User SET refreshToken = '${JSON.stringify(
-            newRefreshTokenArray
-          )}' WHERE mem_id = '${foundMember.mem_id}'`;
-          mysqlDB.query(updateQuery, (err: any, result: any) => {
+        try {
+          const decoded = jwt.verify(refreshToken, secret);
+          if (mem_id !== decoded.id) {
+            return res.status(403).json({
+              status: 403,
+              code: "Forbidden",
+              message: "Forbidden",
+            });
+          }
+
+          const UserQuery = `SELECT * FROM Member WHERE mem_username = '${decoded.username}'`;
+          mysqlDB.query(UserQuery, async (err: any, result: any) => {
             if (err) {
               console.log(err);
               return res.sendStatus(500);
             }
-            console.log(result);
+            if (result.length > 0) {
+              const { mem_type, mem_username } = result[0];
+
+              const accessToken = await jwtSign(
+                {
+                  id: mem_id,
+                  role: mem_type,
+                  username: mem_username,
+                },
+                "1m"
+              );
+              return res.json({ mem_type, accessToken });
+            } else {
+              return res.status(404).json({
+                status: 404,
+                code: "Not Found",
+                message: "User not found",
+              });
+            }
           });
+        } catch (err) {
+          console.log("expired refresh token");
+          const updateQuery = `UPDATE RefreshToken SET refresh_token = ? WHERE mem_id = ?`;
+          mysqlDB.query(
+            updateQuery,
+            [null, mem_id],
+            (err: any, result: any) => {
+              if (err) {
+                console.log(err);
+                return res.sendStatus(500);
+              }
+              console.log("expired refresh token please login");
+              return res.status(403).json({
+                status: 403,
+                code: "Forbidden",
+                message: "Forbidden",
+              });
+            }
+          );
         }
-
-        if (err || foundMember.mem_id !== decoded.id) {
-          return res.status(403).json({
-            status: 403,
-            code: "Forbidden",
-            message: "Forbidden",
-          });
-        }
-
-        const accessToken = await jwtSign(
-          {
-            id: foundMember.mem_id,
-            role: foundMember.mem_type,
-            username: foundMember.mem_username,
-          },
-          "1m"
-        );
-
-        res.json({ mem_type: foundMember.mem_type, accessToken });
-      });
-    });
+      }
+    );
   } catch (err) {
     ResponseError(err, res);
   }
