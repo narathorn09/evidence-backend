@@ -92,14 +92,22 @@ const Login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
                             sameSite: "none",
                             maxAge: 24 * 60 * 60 * 1000,
                         });
-                        //    res.cookie("refresh", newRefreshToken, {
-                        //      httpOnly: false,
-                        //      secure: false,
-                        //      sameSite: "strict",
-                        //      maxAge: 24 * 60 * 60 * 1000,
-                        //      domain: "localhost",
-                        //      path: "/",
-                        //    });
+                        // ############################################  for test localhost
+                        // res.cookie("refresh", newRefreshToken, {
+                        //   httpOnly: false,
+                        //   secure: true,
+                        //   sameSite: "none",
+                        //   maxAge: 24 * 60 * 60 * 1000,
+                        //   domain: "localhost",
+                        // });
+                        // ############################################  for test IPv4
+                        // res.cookie("refresh", newRefreshToken, {
+                        //   httpOnly: false,
+                        //   secure: false,
+                        //   sameSite: "strict",
+                        //   maxAge: 24 * 60 * 60 * 1000,
+                        //   domain: "172.22.118.24",
+                        // });
                         res.status(200).json({ mem_type, accessToken });
                     });
                 }

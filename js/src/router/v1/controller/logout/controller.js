@@ -29,11 +29,19 @@ const Logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
                 return res.sendStatus(500);
             }
             if (result.length === 0) {
+                // for https
                 res.clearCookie("refresh", {
                     httpOnly: true,
                     sameSite: "none",
                     secure: true,
                 });
+                // // for test IPv4
+                // res.clearCookie("refresh", {
+                //   httpOnly: false,
+                //   secure: false,
+                //   sameSite: "strict",
+                //   domain: "172.22.118.24",
+                // });
                 return res.send("clearCookie");
             }
             const { mem_id } = result[0];
