@@ -40,20 +40,16 @@ const GetMe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
                     query = `SELECT * FROM Member JOIN Admin ON Member.mem_id = Admin.mem_id  WHERE Member.mem_id = ${decoded.id} AND Admin.mem_id = ${decoded.id}`;
                     break;
                 case "1": //commander
-                    query =
-                        " SELECT * FROM Member JOIN Commander ON Member.mem_id = Commander.mem_id";
+                    query = ` SELECT * FROM Member JOIN Commander ON Member.mem_id = Commander.mem_id WHERE Member.mem_id = ${decoded.id} AND Commander.mem_id = ${decoded.id}`;
                     break;
                 case "2": //Scene Investigator
-                    query =
-                        " SELECT * FROM Member JOIN Scene_investigators ON Member.mem_id = Scene_investigators.mem_id";
+                    query = ` SELECT * FROM Member JOIN Scene_investigators ON Member.mem_id = Scene_investigators.mem_id WHERE Member.mem_id = ${decoded.id} AND Scene_investigators.mem_id = ${decoded.id}`;
                     break;
                 case "3": //Director
-                    query =
-                        " SELECT * FROM Member JOIN Director ON Member.mem_id = Director.mem_id";
+                    query = ` SELECT * FROM Member JOIN Director ON Member.mem_id = Director.mem_id WHERE Member.mem_id = ${decoded.id} AND Director.mem_id = ${decoded.id}`;
                     break;
                 case "4": //Expert
-                    query =
-                        " SELECT * FROM Member JOIN Expert ON Member.mem_id = Expert.mem_id";
+                    query = ` SELECT * FROM Member JOIN Expert ON Member.mem_id = Expert.mem_id WHERE Member.mem_id = ${decoded.id} AND Expert.mem_id = ${decoded.id}`;
                     break;
                 default:
                     res.status(403).json({
@@ -92,13 +88,11 @@ const GetMe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
                         nametitle: member.com_nametitle ||
                             member.director_nametitle ||
                             member.inves_nametitle ||
-                            member.expert_nametitle ||
-                            "-",
+                            member.expert_nametitle,
                         rank: member.com_rank ||
                             member.director_rank ||
                             member.inves_rank ||
-                            member.expert_rank ||
-                            "-",
+                            member.expert_rank,
                     });
                 }
             }));
