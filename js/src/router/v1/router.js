@@ -12,8 +12,10 @@ const controller_4 = __importDefault(require("./controller/accesstoken/controlle
 // admin
 const create_admin_1 = __importDefault(require("./controller/admin/create-admin"));
 const create_commander_1 = __importDefault(require("./controller/admin/create-commander"));
-const list_commander_1 = __importDefault(require("./controller/admin/list-commander"));
+const create_director_1 = __importDefault(require("./controller/admin/create-director"));
 const list_admin_1 = __importDefault(require("./controller/admin/list-admin"));
+const list_director_1 = __importDefault(require("./controller/admin/list-director"));
+const list_commander_1 = __importDefault(require("./controller/admin/list-commander"));
 const getbyid_admin_1 = __importDefault(require("./controller/admin/getbyid-admin"));
 const delete_member_1 = __importDefault(require("./controller/admin/delete-member"));
 const check_username_1 = __importDefault(require("./controller/admin/check-username"));
@@ -25,6 +27,7 @@ routerv1.route("/accesstoken").get(controller_4.default);
 routerv1.route("/checkUsername").post(check_username_1.default);
 routerv1.route("/admin").post(create_admin_1.default).get(list_admin_1.default);
 routerv1.route("/commander").post(create_commander_1.default).get(list_commander_1.default);
+routerv1.route("/director").post(create_director_1.default).get(list_director_1.default);
 routerv1.route("/adminById").get(getbyid_admin_1.default);
 routerv1.route("/memberById/:memId").delete(auth_1.default, delete_member_1.default);
 exports.default = routerv1;

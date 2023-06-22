@@ -9,12 +9,13 @@ import HandleAccessToken from "./controller/accesstoken/controller";
 // admin
 import CreateAdmin from "./controller/admin/create-admin";
 import CreateCommander from "./controller/admin/create-commander";
-import ListCommander from "./controller/admin/list-commander";
+import CreateDirector from "./controller/admin/create-director";
 import ListAdmin from "./controller/admin/list-admin";
+import ListDirector from "./controller/admin/list-director";
+import ListCommander from "./controller/admin/list-commander";
 import GetAdminById from "./controller/admin/getbyid-admin";
 import DeleteMember from "./controller/admin/delete-member";
 import CheckUsername from "./controller/admin/check-username";
-
 
 const routerv1 = Router();
 
@@ -26,6 +27,7 @@ routerv1.route("/accesstoken").get(HandleAccessToken);
 routerv1.route("/checkUsername").post(CheckUsername);
 routerv1.route("/admin").post(CreateAdmin).get(ListAdmin);
 routerv1.route("/commander").post(CreateCommander).get(ListCommander);
+routerv1.route("/director").post(CreateDirector).get(ListDirector);
 routerv1.route("/adminById").get(GetAdminById);
 routerv1.route("/memberById/:memId").delete(Auth, DeleteMember);
 
