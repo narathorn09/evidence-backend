@@ -13,6 +13,7 @@ import ListCommander from "./controller/admin/list-commander";
 import ListAdmin from "./controller/admin/list-admin";
 import GetAdminById from "./controller/admin/getbyid-admin";
 import DeleteMember from "./controller/admin/delete-member";
+import CheckUsername from "./controller/admin/check-username";
 
 
 const routerv1 = Router();
@@ -22,6 +23,7 @@ routerv1.route("/login").post(Login);
 routerv1.route("/logout").get(Auth, Logout);
 routerv1.route("/accesstoken").get(HandleAccessToken);
 
+routerv1.route("/checkUsername").post(CheckUsername);
 routerv1.route("/admin").post(CreateAdmin).get(ListAdmin);
 routerv1.route("/commander").post(CreateCommander).get(ListCommander);
 routerv1.route("/adminById").get(GetAdminById);
