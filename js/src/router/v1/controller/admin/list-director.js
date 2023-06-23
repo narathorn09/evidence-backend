@@ -8,7 +8,9 @@ const responseError_1 = __importDefault(require("../../components/responseError"
 const ListDirector = (req, res, next) => {
     try {
         const query = ` 
-        SELECT *
+        SELECT
+        Member.mem_id, Member.mem_type, Member.mem_username,
+        Director.director_id, Director.director_nametitle, Director.director_rank, Director.director_fname, Director.director_lname
         FROM Member
         JOIN Director ON Member.mem_id = Director.mem_id
       `;

@@ -8,7 +8,9 @@ const responseError_1 = __importDefault(require("../../components/responseError"
 const ListCommander = (req, res, next) => {
     try {
         const query = ` 
-        SELECT *
+        SELECT 
+        Member.mem_id, Member.mem_type, Member.mem_username,
+        Commander.com_id, Commander.com_nametitle, Commander.com_rank, Commander.com_fname, Commander.com_lname
         FROM Member
         JOIN Commander ON Member.mem_id = Commander.mem_id
       `;

@@ -8,9 +8,11 @@ const responseError_1 = __importDefault(require("../../components/responseError"
 const ListAdmin = (req, res, next) => {
     try {
         const query = ` 
-        SELECT *
+        SELECT
+        Member.mem_id, Member.mem_type, Member.mem_username, 
+        Admin.admin_id, Admin.admin_fname, Admin.admin_lname
         FROM Member
-        JOIN Admin ON Member.mem_id = Admin.mem_id
+        JOIN Admin ON Member.mem_id = Admin.mem_id;    
       `;
         mysql_1.mysqlDB.query(query, (err, result) => {
             if (err) {
