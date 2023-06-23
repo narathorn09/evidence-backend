@@ -25,10 +25,10 @@ routerv1.route("/logout").get(Auth, Logout);
 routerv1.route("/accesstoken").get(HandleAccessToken);
 
 routerv1.route("/checkUsername").post(CheckUsername);
-routerv1.route("/admin").post(CreateAdmin).get(ListAdmin);
-routerv1.route("/commander").post(CreateCommander).get(ListCommander);
-routerv1.route("/director").post(CreateDirector).get(ListDirector);
-routerv1.route("/adminById").get(GetAdminById);
+routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin);
+routerv1.route("/commander").post(Auth,CreateCommander).get(Auth,ListCommander);
+routerv1.route("/director").post(Auth,CreateDirector).get(Auth,ListDirector);
+routerv1.route("/adminById").get(Auth,GetAdminById);
 routerv1.route("/memberById/:memId").delete(Auth, DeleteMember);
 
 export default routerv1;

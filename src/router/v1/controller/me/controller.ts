@@ -16,8 +16,14 @@ const GetMe = async (req: Request, res: Response, next: NextFunction) => {
     const refreshToken = cookies.refresh;
     jwt.verify(refreshToken, secret, async (err: any, decoded: any) => {
       if (err) {
-        console.log("in me ", err);
-        res.status(403).json({
+        console.log("refreshToken in cookies: ",err.message);
+        res.clearCookie("refresh", {
+          httpOnly: true,
+          sameSite: "none",
+          secure: true,
+        });
+
+        return res.status(403).json({
           status: 403,
           code: "INVALID_TOKEN",
           message: "Invalid Token",
