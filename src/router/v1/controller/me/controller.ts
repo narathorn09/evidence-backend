@@ -10,7 +10,7 @@ const GetMe = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // On client, also delete the accessToken
     const cookies = req.cookies;
-    console.log("cookie", cookies);
+    // console.log("cookie", cookies);
 
     if (!cookies?.refresh) return res.sendStatus(204); // No content
     const refreshToken = cookies.refresh;
@@ -23,7 +23,7 @@ const GetMe = async (req: Request, res: Response, next: NextFunction) => {
           message: "Invalid Token",
         });
       }
-      console.log("decoded", decoded);
+      // console.log("decoded", decoded);
       let query = "";
       switch (decoded.role) {
         case "0": //admin
@@ -59,7 +59,7 @@ const GetMe = async (req: Request, res: Response, next: NextFunction) => {
             message: "Error in fetching user from database",
           });
         } else {
-          console.log("found in me", results[0]);
+          // console.log("found in me", results[0]);
           const member = results[0];
           res.status(200).json({
             id: member.mem_id,

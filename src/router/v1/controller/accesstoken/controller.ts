@@ -58,7 +58,7 @@ const HandleAccessToken = async (
                         console.log(err);
                         return res.sendStatus(500);
                       }
-                      console.log(result);
+                      // console.log(result);
                     }
                   );
                 }

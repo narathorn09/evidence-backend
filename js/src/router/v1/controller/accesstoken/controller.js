@@ -52,7 +52,7 @@ const HandleAccessToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                                     console.log(err);
                                     return res.sendStatus(500);
                                 }
-                                console.log(result);
+                                // console.log(result);
                             });
                         }
                     }));

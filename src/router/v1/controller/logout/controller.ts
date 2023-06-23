@@ -38,7 +38,7 @@ const Logout = async (req: Request, res: Response, next: NextFunction) => {
           return res.sendStatus(500);
         }
 
-        console.log(result);
+        // console.log(result);
 
         // Clear the refresh token cookie
         res.clearCookie("refresh", {

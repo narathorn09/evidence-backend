@@ -26,7 +26,7 @@ const Auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 message: "Unauthorized",
             });
         const token = (_b = `${authHeader}`) === null || _b === void 0 ? void 0 : _b.split(" ")[1];
-        console.log("token in check", token, authHeader);
+        // console.log("token in check", token, authHeader);
         jwt.verify(token, secret, (err, decoded) => {
             if (err)
                 return res.status(403).json({
@@ -35,7 +35,7 @@ const Auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                     message: "Invalid Token",
                 }); //invalid token
             if (decoded) {
-                console.log("decoded", decoded);
+                // console.log("decoded", decoded);
                 next();
             }
         });

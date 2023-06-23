@@ -15,7 +15,7 @@ const Auth = async (req: Request, res: Response, next: NextFunction) => {
         message: "Unauthorized",
       });
     const token = `${authHeader}`?.split(" ")[1];
-    console.log("token in check", token, authHeader);
+    // console.log("token in check", token, authHeader);
     jwt.verify(token, secret, (err: any, decoded: any) => {
       if (err)
         return res.status(403).json({
@@ -24,7 +24,7 @@ const Auth = async (req: Request, res: Response, next: NextFunction) => {
           message: "Invalid Token",
         }); //invalid token
       if (decoded) {
-        console.log("decoded", decoded);
+        // console.log("decoded", decoded);
         next();
       }
     });

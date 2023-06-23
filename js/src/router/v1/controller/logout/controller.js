@@ -45,7 +45,7 @@ const Logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
                     console.log(err);
                     return res.sendStatus(500);
                 }
-                console.log(result);
+                // console.log(result);
                 // Clear the refresh token cookie
                 res.clearCookie("refresh", {
                     httpOnly: true,

@@ -20,7 +20,7 @@ const GetMe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         // On client, also delete the accessToken
         const cookies = req.cookies;
-        console.log("cookie", cookies);
+        // console.log("cookie", cookies);
         if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refresh))
             return res.sendStatus(204); // No content
         const refreshToken = cookies.refresh;
@@ -33,7 +33,7 @@ const GetMe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
                     message: "Invalid Token",
                 });
             }
-            console.log("decoded", decoded);
+            // console.log("decoded", decoded);
             let query = "";
             switch (decoded.role) {
                 case "0": //admin
@@ -69,7 +69,7 @@ const GetMe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
                     });
                 }
                 else {
-                    console.log("found in me", results[0]);
+                    // console.log("found in me", results[0]);
                     const member = results[0];
                     res.status(200).json({
                         id: member.mem_id,
