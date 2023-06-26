@@ -5,13 +5,15 @@ import ResponseError from "../../components/responseError";
 const ListGroup = (req: Request, res: Response, next: NextFunction) => {
   try {
     const query = ` 
-        SELECT
-        GroupTable.group_id, GroupTable.group_name,
-        Director.director_rank, Director.director_fname, Director.director_lname
-        FROM GroupTable
-        JOIN Director ON GroupTable.director_id = Director.director_id
+    SELECT
+      g.group_id, g.group_name,
+      d.director_rank, d.director_fname, d.director_lname
+    FROM
+        GroupTable g
+    LEFT JOIN
+        Director d ON g.director_id = d.director_id;
       `;
-    mysqlDB.query(query, (err: any, resulthavedirec: any) => {
+    mysqlDB.query(query, (err: any, result: any) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
@@ -19,17 +21,7 @@ const ListGroup = (req: Request, res: Response, next: NextFunction) => {
           message: "Error get all group",
         });
       } else {
-        const query = `SELECT * FROM GroupTable WHERE director_id IS NULL`;
-        mysqlDB.query(query, (err: any, result: any) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).json({
-              status: "500",
-              message: "Error get all group without director",
-            });
-          }
-          res.send([...resulthavedirec, ...result]);
-        });
+        res.send(result);
       }
     });
   } catch (err) {
