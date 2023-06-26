@@ -5,23 +5,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mysql_1 = require("../../../../db/mysql");
 const responseError_1 = __importDefault(require("../../components/responseError"));
-const ListGroup = (req, res, next) => {
+const ListSceneInvestigator = (req, res, next) => {
     try {
         const query = ` 
     SELECT
-      g.group_id, g.group_name,
-      d.director_rank, d.director_fname, d.director_lname
+        Member.mem_id, Member.mem_type, Member.mem_username,
+        Scene_investigators.inves_id, Scene_investigators.inves_nametitle, Scene_investigators.inves_rank,
+        Scene_investigators.inves_fname, Scene_investigators.inves_lname,
+        Scene_investigators.group_id, GroupTable.group_name
     FROM
-        GroupTable g
+        Member
+    JOIN
+        Scene_investigators ON Member.mem_id = Scene_investigators.mem_id
     LEFT JOIN
-        Director d ON g.director_id = d.director_id;
+        GroupTable ON Scene_investigators.group_id = GroupTable.group_id;
+
       `;
         mysql_1.mysqlDB.query(query, (err, result) => {
             if (err) {
                 console.log(err);
                 return res.status(500).json({
                     status: "500",
-                    message: "Error get all group",
+                    message: "Error get all scene investigator",
                 });
             }
             else {
@@ -33,4 +38,4 @@ const ListGroup = (req, res, next) => {
         (0, responseError_1.default)(err, res);
     }
 };
-exports.default = ListGroup;
+exports.default = ListSceneInvestigator;

@@ -19,6 +19,8 @@ import CheckUsername from "./controller/admin/check-username";
 import ListGroup from "./controller/admin/list-group";
 import CreateGroup from "./controller/admin/create-group";
 import DeleteGroup from "./controller/admin/delete-group";
+import CreateSceneInvestigator from "./controller/admin/create-scene-investigators";
+import ListSceneInvestigator from "./controller/admin/list-scene-investigators";
 
 const routerv1 = Router();
 
@@ -33,6 +35,7 @@ routerv1.route("/groupById/:groupId").delete(Auth, DeleteGroup)
 routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin);
 routerv1.route("/commander").post(Auth,CreateCommander).get(Auth,ListCommander);
 routerv1.route("/director").post(Auth,CreateDirector).get(Auth,ListDirector);
+routerv1.route("/sceneInvestigator").post(Auth,CreateSceneInvestigator).get(Auth,ListSceneInvestigator)
 routerv1.route("/adminById").get(Auth,GetAdminById);
 routerv1.route("/memberById/:memId").delete(Auth, DeleteMember);
 
