@@ -54,9 +54,9 @@ CREATE TABLE Director (
 CREATE TABLE GroupTable (
     group_id INT AUTO_INCREMENT,
     group_name VARCHAR(50) NOT NULL,
-    director_id INT NOT NULL,
+    director_id INT NULL,
     PRIMARY KEY (group_id),
-    FOREIGN KEY (director_id) REFERENCES Director(director_id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (director_id) REFERENCES Director(director_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE Type_Evidence (
@@ -72,10 +72,10 @@ CREATE TABLE Scene_investigators (
     inves_fname VARCHAR(50) NOT NULL,
     inves_lname VARCHAR(50) NOT NULL,
     mem_id INT NOT NULL,
-    group_id INT NOT NULL,
+    group_id INT NULL,
     PRIMARY KEY (inves_id),
     FOREIGN KEY (mem_id) REFERENCES Member(mem_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (group_id) REFERENCES GroupTable(group_id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (group_id) REFERENCES GroupTable(group_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE Expert (
@@ -85,10 +85,10 @@ CREATE TABLE Expert (
     expert_fname VARCHAR(50) NOT NULL,
     expert_lname VARCHAR(50) NOT NULL,
     mem_id INT NOT NULL,
-    group_id INT NOT NULL,
+    group_id INT NULL,
     PRIMARY KEY (expert_id),
     FOREIGN KEY (mem_id) REFERENCES Member(mem_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (group_id) REFERENCES GroupTable(group_id)
+    FOREIGN KEY (group_id) REFERENCES GroupTable(group_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE CaseTable (
@@ -101,9 +101,9 @@ CREATE TABLE CaseTable (
     case_location VARCHAR(150) NOT NULL,
     case_type VARCHAR(50) NOT NULL,
     case_status CHAR(1) NOT NULL,
-    mem_id INT NOT NULL,
+    inves_id INT NULL,
     PRIMARY KEY (case_id),
-    FOREIGN KEY (mem_id) REFERENCES Scene_investigators(inves_id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (inves_id) REFERENCES Scene_investigators(inves_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE Evidence (
@@ -113,10 +113,10 @@ CREATE TABLE Evidence (
     evidence_detail VARCHAR(150) NOT NULL,
     evidence_status CHAR(1) NOT NULL,
     case_id INT NOT NULL,
-    type_e_id INT NOT NULL,
+    type_e_id INT NULL,
     PRIMARY KEY (evidence_id),
     FOREIGN KEY (case_id) REFERENCES CaseTable(case_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (type_e_id) REFERENCES Type_Evidence(type_e_id) ON UPDATE CASCADE
+    FOREIGN KEY (type_e_id) REFERENCES Type_Evidence(type_e_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE TABLE Assign (
@@ -126,9 +126,9 @@ CREATE TABLE Assign (
     assign_exp_status CHAR(1) NOT NULL,
     evidence_id INT NOT NULL,
     group_id INT NOT NULL,
-    expert_id INT NOT NULL,
+    expert_id INT NULL,
     PRIMARY KEY (assign_id),
     FOREIGN KEY (evidence_id) REFERENCES Evidence(evidence_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES GroupTable(group_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (expert_id) REFERENCES Expert(expert_id) ON UPDATE CASCADE
+    FOREIGN KEY (expert_id) REFERENCES Expert(expert_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
