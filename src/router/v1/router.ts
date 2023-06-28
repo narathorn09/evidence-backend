@@ -23,6 +23,8 @@ import CreateSceneInvestigator from "./controller/admin/create-scene-investigato
 import ListSceneInvestigator from "./controller/admin/list-scene-investigators";
 import CreateExpert from "./controller/admin/create-expert";
 import ListExpert from "./controller/admin/list-expert";
+import CountMember from "./controller/admin/count-member";
+import CountGroup from "./controller/admin/count-groups";
 
 const routerv1 = Router();
 
@@ -32,6 +34,8 @@ routerv1.route("/logout").get(Auth, Logout);
 routerv1.route("/accesstoken").get(HandleAccessToken);
 
 routerv1.route("/checkUsername").post(CheckUsername);
+routerv1.route("/countMember").get(CountMember);
+routerv1.route("/countGroup").get(CountGroup);
 routerv1.route("/group").post(Auth,CreateGroup).get(Auth,ListGroup)
 routerv1.route("/groupById/:groupId").delete(Auth, DeleteGroup)
 routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin);
