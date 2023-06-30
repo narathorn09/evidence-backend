@@ -18,6 +18,11 @@ userModel.getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, fu
     const [rows] = yield mysql_1.mysqlDB.query("SELECT * FROM Member WHERE mem_username = ?", [username]);
     return rows.length > 0 ? rows[0] : null;
 });
+userModel.deleteUserById = (memId) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `DELETE FROM Member WHERE mem_id=${memId}`;
+    const [rows] = yield mysql_1.mysqlDB.query(query);
+    return rows ? true : false;
+});
 userModel.comparePassword = (password, hashedPassword) => __awaiter(void 0, void 0, void 0, function* () {
     return yield bcrypt.compare(password, hashedPassword);
 });

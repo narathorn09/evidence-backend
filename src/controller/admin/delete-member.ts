@@ -1,27 +1,28 @@
 import { Request, Response, NextFunction } from "express";
-import { mysqlDB } from "../../db/mysql";
 import ResponseError from "../../components/responseError";
+import userModel from "../../models/userModel";
 
-const DeleteMember = (req: Request, res: Response, next: NextFunction) => {
+const DeleteMember = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { memId } = req.params;
-    const query = `DELETE FROM Member WHERE mem_id=${memId}`;
-    mysqlDB.query(query, (err: any, result: any) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json({
-          status: "500",
-          message: "Error delete member",
-        });
-      } else {
-        res.status(200).json({
-          status: "200",
-          message: "Delete member success",
-        });
-      }
+    const response = await userModel.deleteUserById(memId);
+    if (!response) {
+      res.status(500).json({
+        status: "500",
+        message: "Error delete member",
+      });
+      return;
+    }
+    res.status(200).json({
+      status: "200",
+      message: "Delete member success",
     });
   } catch (err) {
-    ResponseError(err, res)
+    ResponseError(err, res);
   }
 };
 

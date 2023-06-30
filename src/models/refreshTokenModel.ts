@@ -43,16 +43,13 @@ refreshTokenModel.updateTokenById = async (
 };
 
 refreshTokenModel.findTokenByToken = async (
-
   newRefreshToken: string
 ): Promise<boolean> => {
- 
-    const [rows] = await mysqlDB.query(
-      "SELECT * FROM RefreshToken WHERE refresh_token = ?",
-      [newRefreshToken]
-    );
-    return rows.length > 0;
- 
+  const [rows] = await mysqlDB.query(
+    "SELECT * FROM RefreshToken WHERE refresh_token = ?",
+    [newRefreshToken]
+  );
+  return rows.length > 0;
 };
 
 export default refreshTokenModel;

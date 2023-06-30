@@ -14,7 +14,7 @@ import ListAdmin from "../../controller/admin/list-admin";
 // import ListDirector from "./controller/admin/list-director";
 // import ListCommander from "./controller/admin/list-commander";
 // import GetAdminById from "./controller/admin/getbyid-admin";
-// import DeleteMember from "./controller/admin/delete-member";
+import DeleteMember from "../../controller/admin/delete-member";
 // import CheckUsername from "./controller/admin/check-username";
 // import ListGroup from "./controller/admin/list-group";
 // import CreateGroup from "./controller/admin/create-group";
@@ -47,6 +47,6 @@ routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin)
 // routerv1.route("/sceneInvestigator").post(Auth,CreateSceneInvestigator).get(Auth,ListSceneInvestigator)
 // routerv1.route("/expert").post(Auth,CreateExpert).get(Auth,ListExpert)
 // routerv1.route("/adminById").get(Auth,GetAdminById);
-// routerv1.route("/memberById/:memId").delete(Auth, DeleteMember);
+routerv1.route("/memberById/:memId").delete(Auth, DeleteMember);
 
 export default routerv1;

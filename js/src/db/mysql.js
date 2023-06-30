@@ -8,4 +8,6 @@ exports.mysqlDB = mysql.createPool({
     user: db_user,
     password: db_pass,
     database: db_name,
+    waitForConnections: true,
+    // connectionLimit: 10,
 });

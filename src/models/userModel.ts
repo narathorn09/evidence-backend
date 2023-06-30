@@ -34,6 +34,14 @@ userModel.getUserByUsername = async (
   return rows.length > 0 ? rows[0] : null;
 };
 
+userModel.deleteUserById = async (
+  memId: number
+): Promise<boolean> => {
+  const query = `DELETE FROM Member WHERE mem_id=${memId}`;
+  const [rows] = await mysqlDB.query(query);
+  return rows ? true : false;
+};
+
 userModel.comparePassword = async (
   password: string,
   hashedPassword: string
@@ -98,12 +106,12 @@ userModel.getMe = async (refreshToken: string): Promise<Me | null> => {
 
 userModel.logout = async (refreshToken: string): Promise<any> => {
   const query = `SELECT * FROM RefreshToken WHERE refresh_token = ?`;
-  const [rows] = await mysqlDB.query(query, [refreshToken])
-  if(rows.length === 0) return null
-  const id = rows[0].mem_id
+  const [rows] = await mysqlDB.query(query, [refreshToken]);
+  if (rows.length === 0) return null;
+  const id = rows[0].mem_id;
   const updateQuery = `UPDATE RefreshToken SET refresh_token = ? WHERE mem_id = ?`;
-  await mysqlDB.query(updateQuery, [null, id])
-  return true
+  await mysqlDB.query(updateQuery, [null, id]);
+  return true;
 };
 
 export default userModel;
