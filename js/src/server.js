@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const http_1 = require("http");
 const corsOptions_1 = require("../config/corsOptions");
-const mysql_1 = require("./db/mysql");
 const credentials_1 = require("./router/v1/middleware/credentials");
 const router_1 = __importDefault(require("./router/v1/router"));
 const cookieParser = require("cookie-parser");
@@ -18,7 +17,7 @@ app.use(credentials_1.credentials);
 app.use(cors(corsOptions_1.corsOptions));
 app.use(express_1.default.json());
 app.use(cookieParser());
-mysql_1.mysqlDB.connect();
+// mysqlDB.connect();
 app.get("/", (req, res, next) => {
     res.send("Hello, API For Express & MySQL");
 });

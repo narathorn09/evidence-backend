@@ -25,6 +25,9 @@ import CreateExpert from "./controller/admin/create-expert";
 import ListExpert from "./controller/admin/list-expert";
 import CountMember from "./controller/admin/count-member";
 import CountGroup from "./controller/admin/count-groups";
+import UpdateAdmin from "./controller/admin/update-admin";
+import UpdateCommander from "./controller/admin/update-commander";
+import UpdateDirector from "./controller/admin/update-director";
 
 const routerv1 = Router();
 
@@ -38,9 +41,9 @@ routerv1.route("/countMember").get(CountMember);
 routerv1.route("/countGroup").get(CountGroup);
 routerv1.route("/group").post(Auth,CreateGroup).get(Auth,ListGroup)
 routerv1.route("/groupById/:groupId").delete(Auth, DeleteGroup)
-routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin);
-routerv1.route("/commander").post(Auth,CreateCommander).get(Auth,ListCommander);
-routerv1.route("/director").post(Auth,CreateDirector).get(Auth,ListDirector);
+routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin).put(UpdateAdmin)
+routerv1.route("/commander").post(Auth,CreateCommander).get(Auth,ListCommander).put(UpdateCommander)
+routerv1.route("/director").post(Auth,CreateDirector).get(Auth,ListDirector).put(UpdateDirector)
 routerv1.route("/sceneInvestigator").post(Auth,CreateSceneInvestigator).get(Auth,ListSceneInvestigator)
 routerv1.route("/expert").post(Auth,CreateExpert).get(Auth,ListExpert)
 routerv1.route("/adminById").get(Auth,GetAdminById);
