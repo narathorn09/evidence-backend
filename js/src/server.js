@@ -17,7 +17,6 @@ app.use(credentials_1.credentials);
 app.use(cors(corsOptions_1.corsOptions));
 app.use(express_1.default.json());
 app.use(cookieParser());
-// mysqlDB.connect();
 app.get("/", (req, res, next) => {
     res.send("Hello, API For Express & MySQL");
 });

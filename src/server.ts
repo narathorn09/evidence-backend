@@ -1,7 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import { createServer, Server } from "http";
 import { corsOptions } from "../config/corsOptions";
-import { mysqlDB } from "./db/mysql";
 import { credentials } from "./middleware/credentials";
 import routerv1 from "./router/v1/router";
 const cookieParser = require("cookie-parser");
@@ -11,13 +10,12 @@ const {
   server: { port },
 } = require("config");
 
-
 const app: Application = express();
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
-// mysqlDB.connect();
+
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.send("Hello, API For Express & MySQL");
 });

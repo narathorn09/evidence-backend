@@ -7,10 +7,10 @@ import Logout from "../../controller/logout/controller";
 import Login from "../../controller/login/controller";
 
 // admin
-// import CreateAdmin from "./controller/admin/create-admin";
+import CreateAdmin from "../../controller/admin/create-admin";
 // import CreateCommander from "./controller/admin/create-commander";
 // import CreateDirector from "./controller/admin/create-director";
-// import ListAdmin from "./controller/admin/list-admin";
+import ListAdmin from "../../controller/admin/list-admin";
 // import ListDirector from "./controller/admin/list-director";
 // import ListCommander from "./controller/admin/list-commander";
 // import GetAdminById from "./controller/admin/getbyid-admin";
@@ -41,7 +41,7 @@ routerv1.route("/accesstoken").get(HandleAccessToken);
 // routerv1.route("/countGroup").get(CountGroup);
 // routerv1.route("/group").post(Auth,CreateGroup).get(Auth,ListGroup)
 // routerv1.route("/groupById/:groupId").delete(Auth, DeleteGroup)
-// routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin).put(UpdateAdmin)
+routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin)
 // routerv1.route("/commander").post(Auth,CreateCommander).get(Auth,ListCommander).put(UpdateCommander)
 // routerv1.route("/director").post(Auth,CreateDirector).get(Auth,ListDirector).put(UpdateDirector)
 // routerv1.route("/sceneInvestigator").post(Auth,CreateSceneInvestigator).get(Auth,ListSceneInvestigator)
