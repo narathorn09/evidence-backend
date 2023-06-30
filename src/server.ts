@@ -2,7 +2,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import { createServer, Server } from "http";
 import { corsOptions } from "../config/corsOptions";
 import { mysqlDB } from "./db/mysql";
-import { credentials } from "./router/v1/middleware/credentials";
+import { credentials } from "./middleware/credentials";
 import routerv1 from "./router/v1/router";
 const cookieParser = require("cookie-parser");
 const chalk = require("chalk");

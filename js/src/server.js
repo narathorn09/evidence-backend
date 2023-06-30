@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const http_1 = require("http");
 const corsOptions_1 = require("../config/corsOptions");
-const credentials_1 = require("./router/v1/middleware/credentials");
+const credentials_1 = require("./middleware/credentials");
 const router_1 = __importDefault(require("./router/v1/router"));
 const cookieParser = require("cookie-parser");
 const chalk = require("chalk");

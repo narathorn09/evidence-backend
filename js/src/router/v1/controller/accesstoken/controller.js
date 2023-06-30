@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mysql_1 = require("../../../../db/mysql");
-const responseError_1 = __importDefault(require("../../components/responseError"));
+const responseError_1 = __importDefault(require("../../../../components/responseError"));
 const jwtSign_1 = require("../../../../../config/jwtSign");
 const { jwt: { secret }, } = require("config");
 const jwt = require("jsonwebtoken");
