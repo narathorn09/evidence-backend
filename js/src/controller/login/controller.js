@@ -16,8 +16,7 @@ const responseError_1 = __importDefault(require("../../components/responseError"
 const jwtSign_1 = require("../../../config/jwtSign");
 const userModel_1 = __importDefault(require("../../models/userModel"));
 const refreshTokenModel_1 = __importDefault(require("../../models/refreshTokenModel"));
-const authController = {};
-authController.login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, password } = req.body;
         const user = yield userModel_1.default.getUserByUsername(username);
@@ -57,4 +56,4 @@ authController.login = (req, res) => __awaiter(void 0, void 0, void 0, function*
         (0, responseError_1.default)(err, res);
     }
 });
-exports.default = authController;
+exports.default = Login;

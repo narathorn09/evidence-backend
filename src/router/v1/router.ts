@@ -2,9 +2,9 @@ import { Router } from "express";
 
 import Auth from "../../middleware/auth";
 import HandleAccessToken from "../../controller/accesstoken/controller";
-import authController from "../../controller/login/controller";
 import GetMe from "../../controller/me/controller";
 import Logout from "../../controller/logout/controller";
+import Login from "../../controller/login/controller";
 
 // admin
 // import CreateAdmin from "./controller/admin/create-admin";
@@ -32,7 +32,7 @@ import Logout from "../../controller/logout/controller";
 const routerv1 = Router();
 
 routerv1.route("/me").get(GetMe);
-routerv1.route("/login").post(authController.login);
+routerv1.route("/login").post(Login);
 routerv1.route("/logout").get(Auth, Logout);
 routerv1.route("/accesstoken").get(HandleAccessToken);
 

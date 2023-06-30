@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth_1 = __importDefault(require("../../middleware/auth"));
 const controller_1 = __importDefault(require("../../controller/accesstoken/controller"));
-const controller_2 = __importDefault(require("../../controller/login/controller"));
-const controller_3 = __importDefault(require("../../controller/me/controller"));
-const controller_4 = __importDefault(require("../../controller/logout/controller"));
+const controller_2 = __importDefault(require("../../controller/me/controller"));
+const controller_3 = __importDefault(require("../../controller/logout/controller"));
+const controller_4 = __importDefault(require("../../controller/login/controller"));
 // admin
 // import CreateAdmin from "./controller/admin/create-admin";
 // import CreateCommander from "./controller/admin/create-commander";
@@ -32,9 +32,9 @@ const controller_4 = __importDefault(require("../../controller/logout/controller
 // import UpdateCommander from "./controller/admin/update-commander";
 // import UpdateDirector from "./controller/admin/update-director";
 const routerv1 = (0, express_1.Router)();
-routerv1.route("/me").get(controller_3.default);
-routerv1.route("/login").post(controller_2.default.login);
-routerv1.route("/logout").get(auth_1.default, controller_4.default);
+routerv1.route("/me").get(controller_2.default);
+routerv1.route("/login").post(controller_4.default);
+routerv1.route("/logout").get(auth_1.default, controller_3.default);
 routerv1.route("/accesstoken").get(controller_1.default);
 // routerv1.route("/checkUsername").post(CheckUsername);
 // routerv1.route("/countMember").get(CountMember);

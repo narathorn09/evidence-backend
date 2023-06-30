@@ -4,9 +4,7 @@ import { jwtSign } from "../../../config/jwtSign";
 import userModel from "../../models/userModel";
 import refreshTokenModel from "../../models/refreshTokenModel";
 
-const authController: any = {};
-
-authController.login = async (req: Request, res: Response) => {
+const Login = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
 
@@ -58,4 +56,4 @@ authController.login = async (req: Request, res: Response) => {
   }
 };
 
-export default authController;
+export default Login;
