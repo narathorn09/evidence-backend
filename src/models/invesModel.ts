@@ -64,7 +64,7 @@ invesModel.create = async (data: InvesData): Promise<InvesData | null> => {
   }
 };
 
-invesModel.getAll = async (): Promise<[]> => {
+invesModel.getAll = async (): Promise<[] | null> => {
   const query = ` 
     SELECT
         Member.mem_id, Member.mem_type, Member.mem_username,
@@ -80,7 +80,8 @@ invesModel.getAll = async (): Promise<[]> => {
 
   `;
   const [rows] = await mysqlDB.query(query);
-  return rows.length > 0 ? rows : [];
+  if(!rows) return null
+  return rows;
 };
 
 export default invesModel;

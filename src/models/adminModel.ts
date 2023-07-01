@@ -94,7 +94,7 @@ adminModel.update = async (data: AdminData): Promise<AdminData | null> => {
   }
 };
 
-adminModel.getAll = async (): Promise<[]> => {
+adminModel.getAll = async (): Promise<[] | null> => {
   const query = ` 
         SELECT
         Member.mem_id, Member.mem_type, Member.mem_username, 
@@ -103,7 +103,8 @@ adminModel.getAll = async (): Promise<[]> => {
         JOIN Admin ON Member.mem_id = Admin.mem_id;    
       `;
   const [rows] = await mysqlDB.query(query);
-  return rows.length > 0 ? rows : [];
+  if(!rows) return null
+  return rows;
 };
 
 export default adminModel;

@@ -17,6 +17,12 @@ const directorModel_1 = __importDefault(require("../../models/directorModel"));
 const ListDirector = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield directorModel_1.default.getAll();
+        if (!response) {
+            return res.status(500).json({
+                status: "500",
+                message: "Error get all director",
+            });
+        }
         res.send(response);
     }
     catch (err) {

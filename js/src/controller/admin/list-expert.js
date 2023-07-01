@@ -17,6 +17,12 @@ const expertModel_1 = __importDefault(require("../../models/expertModel"));
 const ListExpert = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield expertModel_1.default.getAll();
+        if (!response) {
+            return res.status(500).json({
+                status: "500",
+                message: "Error get all expert",
+            });
+        }
         res.send(response);
     }
     catch (err) {

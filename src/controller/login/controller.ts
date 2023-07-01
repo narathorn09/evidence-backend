@@ -49,7 +49,7 @@ const Login = async (req: Request, res: Response) => {
 
       return res.status(200).json({ mem_type, accessToken });
     } else {
-      return res.status(401).send("Invalid password");
+      return res.status(401).send({message:"Invalid password"});
     }
   } catch (err) {
     ResponseError(err, res);

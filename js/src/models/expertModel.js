@@ -72,6 +72,8 @@ expertModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
         GroupTable g ON g.group_id = e.group_id;
   `;
     const [rows] = yield mysql_1.mysqlDB.query(query);
-    return rows.length > 0 ? rows : [];
+    if (!rows)
+        return null;
+    return rows;
 });
 exports.default = expertModel;

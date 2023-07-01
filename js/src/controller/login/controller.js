@@ -49,7 +49,7 @@ const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(200).json({ mem_type, accessToken });
         }
         else {
-            return res.status(401).send("Invalid password");
+            return res.status(401).send({ message: "Invalid password" });
         }
     }
     catch (err) {

@@ -59,6 +59,8 @@ commanderModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
         JOIN Commander ON Member.mem_id = Commander.mem_id
   `;
     const [rows] = yield mysql_1.mysqlDB.query(query);
-    return rows.length > 0 ? rows : [];
+    if (!rows)
+        return null;
+    return rows;
 });
 exports.default = commanderModel;

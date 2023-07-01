@@ -95,6 +95,8 @@ adminModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
         JOIN Admin ON Member.mem_id = Admin.mem_id;    
       `;
     const [rows] = yield mysql_1.mysqlDB.query(query);
-    return rows.length > 0 ? rows : [];
+    if (!rows)
+        return null;
+    return rows;
 });
 exports.default = adminModel;

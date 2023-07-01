@@ -57,7 +57,7 @@ commanderModel.create = async (
   }
 };
 
-commanderModel.getAll = async (): Promise<[]> => {
+commanderModel.getAll = async (): Promise<[] | null> => {
   const query = ` 
         SELECT 
         Member.mem_id, Member.mem_type, Member.mem_username,
@@ -66,7 +66,8 @@ commanderModel.getAll = async (): Promise<[]> => {
         JOIN Commander ON Member.mem_id = Commander.mem_id
   `;
   const [rows] = await mysqlDB.query(query);
-  return rows.length > 0 ? rows : [];
+  if(!rows) return null
+  return rows;
 };
 
 export default commanderModel;

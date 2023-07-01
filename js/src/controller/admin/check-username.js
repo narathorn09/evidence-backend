@@ -18,9 +18,7 @@ const CheckUsername = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     try {
         const { username } = req.body;
         const response = yield userModel_1.default.getUserByUsername(username);
-        if (!response)
-            return res.status(200).send([]);
-        res.status(200).send(response.mem_username);
+        res.status(200).send(response ? ["username not available"] : []);
     }
     catch (err) {
         (0, responseError_1.default)(err, res);

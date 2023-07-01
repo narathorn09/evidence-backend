@@ -17,6 +17,12 @@ const invesModel_1 = __importDefault(require("../../models/invesModel"));
 const ListSceneInvestigator = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield invesModel_1.default.getAll();
+        if (!response) {
+            return res.status(500).json({
+                status: "500",
+                message: "Error get all scene investigator",
+            });
+        }
         res.send(response);
     }
     catch (err) {

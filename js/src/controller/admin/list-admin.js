@@ -17,6 +17,12 @@ const adminModel_1 = __importDefault(require("../../models/adminModel"));
 const ListAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield adminModel_1.default.getAll();
+        if (!response) {
+            return res.status(500).json({
+                status: "500",
+                message: "Error get all admin",
+            });
+        }
         res.send(response);
     }
     catch (err) {

@@ -14,28 +14,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const responseError_1 = __importDefault(require("../../components/responseError"));
 const userModel_1 = __importDefault(require("../../models/userModel"));
+const { jwt: { secret }, } = require("config");
+const jwt = require("jsonwebtoken");
 const GetMe = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const clearCook = () => {
+        return new Promise((resolve, reject) => {
+            res.clearCookie('refresh', {
+                httpOnly: true,
+                sameSite: 'none',
+                secure: true,
+            });
+            resolve();
+        });
+    };
     try {
         const cookies = req.cookies;
         if (!(cookies === null || cookies === void 0 ? void 0 : cookies.refresh))
             return res.sendStatus(204); // No content
         const refreshToken = cookies.refresh;
-        const me = yield userModel_1.default.getMe(refreshToken);
-        if (!me) {
-            res.clearCookie("refresh", {
-                httpOnly: true,
-                sameSite: "none",
-                secure: true,
-            });
-            return res.status(403).json({
-                status: 403,
-                code: "INVALID_TOKEN",
-                message: "Invalid Token",
-            });
-        }
-        res.status(200).json(me);
+        yield jwt.verify(refreshToken, secret, (err, decode) => __awaiter(void 0, void 0, void 0, function* () {
+            if (err) {
+                clearCook();
+                return res.sendStatus(403);
+            } // Invalid token
+            const me = yield userModel_1.default.getMe(decode);
+            if (!me) {
+                yield clearCook();
+                return res.sendStatus(403);
+            } // Invalid get me in db
+            res.status(200).json(me);
+        }));
     }
     catch (e) {
+        yield clearCook();
         (0, responseError_1.default)(e, res);
     }
 });

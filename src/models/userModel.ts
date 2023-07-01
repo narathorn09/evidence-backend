@@ -1,9 +1,5 @@
 import { mysqlDB } from "../db/mysql";
 const bcrypt = require("bcrypt");
-const {
-  jwt: { secret },
-} = require("config");
-const jwt = require("jsonwebtoken");
 
 interface User {
   mem_id: number;
@@ -34,9 +30,7 @@ userModel.getUserByUsername = async (
   return rows.length > 0 ? rows[0] : null;
 };
 
-userModel.deleteUserById = async (
-  memId: number
-): Promise<boolean> => {
+userModel.deleteUserById = async (memId: number): Promise<boolean> => {
   const query = `DELETE FROM Member WHERE mem_id=${memId}`;
   const [rows] = await mysqlDB.query(query);
   return rows ? true : false;
@@ -49,31 +43,30 @@ userModel.comparePassword = async (
   return await bcrypt.compare(password, hashedPassword);
 };
 
-userModel.getMe = async (refreshToken: string): Promise<Me | null> => {
-  const response = await jwt.verify(refreshToken, secret);
-  if (!response) return null;
+userModel.getMe = async (decode: any): Promise<Me | null> => {
   let query = "";
-  switch (response.role) {
+  switch (decode.role) {
     case "0": //admin
-      query = `SELECT * FROM Member JOIN Admin ON Member.mem_id = Admin.mem_id  WHERE Member.mem_id = ${response.id} AND Admin.mem_id = ${response.id}`;
+      query = `SELECT * FROM Member JOIN Admin ON Member.mem_id = Admin.mem_id  WHERE Member.mem_id = ${decode.id} AND Admin.mem_id = ${decode.id}`;
       break;
     case "1": //commander
-      query = ` SELECT * FROM Member JOIN Commander ON Member.mem_id = Commander.mem_id WHERE Member.mem_id = ${response.id} AND Commander.mem_id = ${response.id}`;
+      query = ` SELECT * FROM Member JOIN Commander ON Member.mem_id = Commander.mem_id WHERE Member.mem_id = ${decode.id} AND Commander.mem_id = ${decode.id}`;
       break;
     case "2": //Scene Investigator
-      query = ` SELECT * FROM Member JOIN Scene_investigators ON Member.mem_id = Scene_investigators.mem_id WHERE Member.mem_id = ${response.id} AND Scene_investigators.mem_id = ${response.id}`;
+      query = ` SELECT * FROM Member JOIN Scene_investigators ON Member.mem_id = Scene_investigators.mem_id WHERE Member.mem_id = ${decode.id} AND Scene_investigators.mem_id = ${decode.id}`;
       break;
     case "3": //Director
-      query = ` SELECT * FROM Member JOIN Director ON Member.mem_id = Director.mem_id WHERE Member.mem_id = ${response.id} AND Director.mem_id = ${response.id}`;
+      query = ` SELECT * FROM Member JOIN Director ON Member.mem_id = Director.mem_id WHERE Member.mem_id = ${decode.id} AND Director.mem_id = ${decode.id}`;
       break;
     case "4": //Expert
-      query = ` SELECT * FROM Member JOIN Expert ON Member.mem_id = Expert.mem_id WHERE Member.mem_id = ${response.id} AND Expert.mem_id = ${response.id}`;
+      query = ` SELECT * FROM Member JOIN Expert ON Member.mem_id = Expert.mem_id WHERE Member.mem_id = ${decode.id} AND Expert.mem_id = ${decode.id}`;
       break;
     default:
       return null;
   }
   const [rows] = await mysqlDB.query(query);
-
+  if(!rows) return null;
+  
   const member = rows[0];
   return {
     id: member.mem_id,

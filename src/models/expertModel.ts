@@ -64,7 +64,7 @@ expertModel.create = async (data: ExpertData): Promise<ExpertData | null> => {
   }
 };
 
-expertModel.getAll = async (): Promise<[]> => {
+expertModel.getAll = async (): Promise<[] | null> => {
   const query = ` 
     SELECT
         m.mem_id, m.mem_type, m.mem_username,
@@ -79,7 +79,8 @@ expertModel.getAll = async (): Promise<[]> => {
         GroupTable g ON g.group_id = e.group_id;
   `;
   const [rows] = await mysqlDB.query(query);
-  return rows.length > 0 ? rows : [];
+  if(!rows) return null
+  return rows;
 };
 
 export default expertModel;
