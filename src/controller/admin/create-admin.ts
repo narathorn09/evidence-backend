@@ -8,11 +8,10 @@ const CreateAdmin = async (req: Request, res: Response, next: NextFunction) => {
     const data = { admin_fname, admin_lname, username, password };
     const response = await adminModel.create(data);
     if (!response) {
-      res.status(500).json({
+      return res.status(500).json({
         status: "500",
         message: "Error creating admin",
       });
-      return;
     }
     res.status(200).json({
       status: "200",

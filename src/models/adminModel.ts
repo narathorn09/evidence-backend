@@ -25,11 +25,21 @@ adminModel.create = async (data: AdminData): Promise<AdminData | null> => {
         "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
       const memData = ["0", username, hash];
       const [resultMem] = await connection.query(memQuery, memData);
+      if (!resultMem) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       const adminQuery =
         "INSERT INTO Admin (admin_fname, admin_lname, mem_id) VALUES (?, ?, ?)";
       const adminData = [admin_fname, admin_lname, resultMem.insertId];
       const [resultAdmin] = await connection.query(adminQuery, adminData);
+      if (!resultAdmin) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       await connection.commit();
       connection.release();
@@ -54,12 +64,22 @@ adminModel.update = async (data: AdminData): Promise<AdminData | null> => {
 
       const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
       const memData = [username, mem_id];
-      await connection.query(memQuery, memData);
+      const [resultMem] = await connection.query(memQuery, memData);
+      if (!resultMem) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       const adminQuery =
         "UPDATE Admin SET admin_fname = ?, admin_lname = ? WHERE mem_id = ? ";
       const adminData = [admin_fname, admin_lname, mem_id];
       const [resultAdmin] = await connection.query(adminQuery, adminData);
+      if (!resultAdmin) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       await connection.commit();
       connection.release();

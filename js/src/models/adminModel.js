@@ -23,9 +23,19 @@ adminModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
             const memQuery = "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
             const memData = ["0", username, hash];
             const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             const adminQuery = "INSERT INTO Admin (admin_fname, admin_lname, mem_id) VALUES (?, ?, ?)";
             const adminData = [admin_fname, admin_lname, resultMem.insertId];
             const [resultAdmin] = yield connection.query(adminQuery, adminData);
+            if (!resultAdmin) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             yield connection.commit();
             connection.release();
             return resultAdmin;
@@ -48,10 +58,20 @@ adminModel.update = (data) => __awaiter(void 0, void 0, void 0, function* () {
             yield connection.beginTransaction();
             const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
             const memData = [username, mem_id];
-            yield connection.query(memQuery, memData);
+            const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             const adminQuery = "UPDATE Admin SET admin_fname = ?, admin_lname = ? WHERE mem_id = ? ";
             const adminData = [admin_fname, admin_lname, mem_id];
             const [resultAdmin] = yield connection.query(adminQuery, adminData);
+            if (!resultAdmin) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             yield connection.commit();
             connection.release();
             return resultAdmin;
