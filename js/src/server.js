@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const http_1 = require("http");
 const corsOptions_1 = require("../config/corsOptions");
 const credentials_1 = require("./middleware/credentials");
-const router_1 = __importDefault(require("./router/v1/router"));
+const routerv1_1 = __importDefault(require("./router/routerv1"));
 const cookieParser = require("cookie-parser");
 const chalk = require("chalk");
 const cors = require("cors");
@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.get("/", (req, res, next) => {
     res.send("Hello, API For Express & MySQL");
 });
-app.use("/api/v1/", router_1.default);
+app.use("/api/v1/", routerv1_1.default);
 const httpServer = (0, http_1.createServer)(app);
 httpServer.listen(port, () => {
     console.log(chalk

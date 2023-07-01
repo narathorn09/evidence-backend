@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { mysqlDB } from "../../db/mysql";
 import ResponseError from "../../components/responseError";
 import adminModel from "../../models/adminModel";
 

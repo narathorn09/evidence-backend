@@ -2,7 +2,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import { createServer, Server } from "http";
 import { corsOptions } from "../config/corsOptions";
 import { credentials } from "./middleware/credentials";
-import routerv1 from "./router/v1/router";
+import routerv1 from "./router/routerv1";
 const cookieParser = require("cookie-parser");
 const chalk = require("chalk");
 const cors = require("cors");
