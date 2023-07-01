@@ -27,6 +27,11 @@ expertModel.create = async (data: ExpertData): Promise<ExpertData | null> => {
         "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
       const memData = ["4", username, hash];
       const [resultMem] = await connection.query(memQuery, memData);
+      if (!resultMem) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       const expertQuery =
         "INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id) VALUES (?, ?, ?, ?, ?, ?)";
@@ -39,6 +44,11 @@ expertModel.create = async (data: ExpertData): Promise<ExpertData | null> => {
         groupid,
       ];
       const [result] = await connection.query(expertQuery, expertData);
+      if (!result) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       await connection.commit();
       connection.release();
@@ -47,10 +57,10 @@ expertModel.create = async (data: ExpertData): Promise<ExpertData | null> => {
     } catch (err) {
       await connection.rollback();
       connection.release();
-      throw new Error("Error creating expert");
+      throw err;
     }
   } catch (err) {
-    throw new Error("Error creating expert");
+    throw err;
   }
 };
 

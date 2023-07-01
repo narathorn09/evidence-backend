@@ -23,9 +23,19 @@ directorModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () 
             const memQuery = "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
             const memData = ["3", username, hash];
             const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             const directorQuery = "INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id) VALUES (?, ?, ?, ?, ?)";
             const directorData = [nametitle, rank, fname, lname, resultMem.insertId];
             const [result] = yield connection.query(directorQuery, directorData);
+            if (!result) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             yield connection.commit();
             connection.release();
             return result;
@@ -33,11 +43,11 @@ directorModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () 
         catch (err) {
             yield connection.rollback();
             connection.release();
-            throw new Error("Error creating director");
+            throw err;
         }
     }
     catch (err) {
-        throw new Error("Error creating director");
+        throw err;
     }
 });
 directorModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {

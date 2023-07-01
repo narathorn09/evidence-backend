@@ -27,9 +27,14 @@ invesModel.create = async (data: InvesData): Promise<InvesData | null> => {
         "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
       const memData = ["2", username, hash];
       const [resultMem] = await connection.query(memQuery, memData);
+      if (!resultMem) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       const invesQuery =
-      "INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id) VALUES (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id) VALUES (?, ?, ?, ?, ?, ?)";
       const invesData = [
         nametitle,
         rank,
@@ -39,6 +44,11 @@ invesModel.create = async (data: InvesData): Promise<InvesData | null> => {
         groupid,
       ];
       const [result] = await connection.query(invesQuery, invesData);
+      if (!result) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       await connection.commit();
       connection.release();
@@ -47,10 +57,10 @@ invesModel.create = async (data: InvesData): Promise<InvesData | null> => {
     } catch (err) {
       await connection.rollback();
       connection.release();
-      throw new Error("Error creating investigator");
+      throw err;
     }
   } catch (err) {
-    throw new Error("Error creating investigator");
+    throw err;
   }
 };
 

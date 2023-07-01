@@ -28,31 +28,37 @@ commanderModel.create = async (
         "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
       const memData = ["1", username, hash];
       const [resultMem] = await connection.query(memQuery, memData);
+      if (!resultMem) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       const commanderQuery =
         "INSERT INTO Commander (com_nametitle, com_rank, com_fname,com_lname,mem_id) VALUES (?, ?, ?, ?, ?)";
       const CommanderData = [nametitle, rank, fname, lname, resultMem.insertId];
-      const [result] = await connection.query(
-        commanderQuery,
-        CommanderData
-      );
+      const [result] = await connection.query(commanderQuery, CommanderData);
+      if (!result) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
 
       await connection.commit();
       connection.release();
-
       return result as CommanderData;
     } catch (err) {
       await connection.rollback();
       connection.release();
-      throw new Error("Error creating commander");
+      throw err;
     }
   } catch (err) {
-    throw new Error("Error creating commander");
+    throw err;
   }
 };
 
 commanderModel.getAll = async (): Promise<[]> => {
-    const query = ` 
+  const query = ` 
         SELECT 
         Member.mem_id, Member.mem_type, Member.mem_username,
         Commander.com_id, Commander.com_nametitle, Commander.com_rank, Commander.com_fname, Commander.com_lname

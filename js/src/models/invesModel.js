@@ -23,6 +23,11 @@ invesModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
             const memQuery = "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
             const memData = ["2", username, hash];
             const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             const invesQuery = "INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id) VALUES (?, ?, ?, ?, ?, ?)";
             const invesData = [
                 nametitle,
@@ -33,6 +38,11 @@ invesModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
                 groupid,
             ];
             const [result] = yield connection.query(invesQuery, invesData);
+            if (!result) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             yield connection.commit();
             connection.release();
             return result;
@@ -40,11 +50,11 @@ invesModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
         catch (err) {
             yield connection.rollback();
             connection.release();
-            throw new Error("Error creating investigator");
+            throw err;
         }
     }
     catch (err) {
-        throw new Error("Error creating investigator");
+        throw err;
     }
 });
 invesModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {

@@ -15,7 +15,7 @@ const CreateGroup = async (req: Request, res: Response, next: NextFunction) => {
     }
     res.status(200).json({
       status: "200",
-      message: "Director created successfully",
+      message: "Group created successfully",
     });
   } catch (err) {
     ResponseError(err, res);

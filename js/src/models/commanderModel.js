@@ -23,9 +23,19 @@ commanderModel.create = (data) => __awaiter(void 0, void 0, void 0, function* ()
             const memQuery = "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
             const memData = ["1", username, hash];
             const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             const commanderQuery = "INSERT INTO Commander (com_nametitle, com_rank, com_fname,com_lname,mem_id) VALUES (?, ?, ?, ?, ?)";
             const CommanderData = [nametitle, rank, fname, lname, resultMem.insertId];
             const [result] = yield connection.query(commanderQuery, CommanderData);
+            if (!result) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             yield connection.commit();
             connection.release();
             return result;
@@ -33,11 +43,11 @@ commanderModel.create = (data) => __awaiter(void 0, void 0, void 0, function* ()
         catch (err) {
             yield connection.rollback();
             connection.release();
-            throw new Error("Error creating commander");
+            throw err;
         }
     }
     catch (err) {
-        throw new Error("Error creating commander");
+        throw err;
     }
 });
 commanderModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {

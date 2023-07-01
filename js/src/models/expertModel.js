@@ -23,6 +23,11 @@ expertModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
             const memQuery = "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
             const memData = ["4", username, hash];
             const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             const expertQuery = "INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id) VALUES (?, ?, ?, ?, ?, ?)";
             const expertData = [
                 nametitle,
@@ -33,6 +38,11 @@ expertModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
                 groupid,
             ];
             const [result] = yield connection.query(expertQuery, expertData);
+            if (!result) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
             yield connection.commit();
             connection.release();
             return result;
@@ -40,11 +50,11 @@ expertModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
         catch (err) {
             yield connection.rollback();
             connection.release();
-            throw new Error("Error creating expert");
+            throw err;
         }
     }
     catch (err) {
-        throw new Error("Error creating expert");
+        throw err;
     }
 });
 expertModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {

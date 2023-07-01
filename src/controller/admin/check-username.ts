@@ -10,9 +10,8 @@ const CheckUsername = async (
   try {
     const { username } = req.body;
     const response = await userModel.getUserByUsername(username);
-    if (!response)
-      return res.status(200).send([]);
-      res.status(200).send(response.mem_username);
+    if (!response) return res.status(200).send([]);
+    res.status(200).send(response.mem_username);
   } catch (err) {
     ResponseError(err, res);
   }

@@ -27,7 +27,7 @@ const CreateGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         }
         res.status(200).json({
             status: "200",
-            message: "Director created successfully",
+            message: "Group created successfully",
         });
     }
     catch (err) {
