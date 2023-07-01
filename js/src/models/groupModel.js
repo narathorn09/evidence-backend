@@ -40,7 +40,9 @@ groupModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
         Director d ON g.director_id = d.director_id;   
       `;
     const [rows] = yield mysql_1.mysqlDB.query(query);
-    return rows.length > 0 ? rows : [];
+    if (!rows)
+        return null;
+    return rows;
 });
 groupModel.deleteGroupById = (groupId) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `DELETE FROM GroupTable WHERE group_id=${groupId}`;

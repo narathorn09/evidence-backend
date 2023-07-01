@@ -25,7 +25,7 @@ groupModel.create = async (data: GroupData): Promise<GroupData | null> => {
   }
 };
 
-groupModel.getAll = async (): Promise<[]> => {
+groupModel.getAll = async (): Promise<[] | null> => {
   const query = ` 
     SELECT
         g.group_id, g.group_name,
@@ -36,12 +36,11 @@ groupModel.getAll = async (): Promise<[]> => {
         Director d ON g.director_id = d.director_id;   
       `;
   const [rows] = await mysqlDB.query(query);
-  return rows.length > 0 ? rows : [];
+  if(!rows) return null
+  return rows;
 };
 
-groupModel.deleteGroupById = async (
-  groupId: number
-): Promise<boolean> => {
+groupModel.deleteGroupById = async (groupId: number): Promise<boolean> => {
   const query = `DELETE FROM GroupTable WHERE group_id=${groupId}`;
   const [rows] = await mysqlDB.query(query);
   return rows ? true : false;
