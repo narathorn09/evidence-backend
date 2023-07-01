@@ -18,11 +18,15 @@ groupModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
         const query = `INSERT INTO GroupTable (group_name, director_id) VALUES (?, ?)`;
         const groupData = [group_name, director_id];
         const [result] = yield connection.query(query, groupData);
+        if (!result) {
+            connection.release();
+            return null;
+        }
         connection.release();
         return result;
     }
     catch (err) {
-        throw new Error("Error creating group");
+        throw err;
     }
 });
 groupModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {

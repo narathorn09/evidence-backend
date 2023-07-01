@@ -14,10 +14,14 @@ groupModel.create = async (data: GroupData): Promise<GroupData | null> => {
     const query = `INSERT INTO GroupTable (group_name, director_id) VALUES (?, ?)`;
     const groupData = [group_name, director_id];
     const [result] = await connection.query(query, groupData);
+    if (!result) {
+      connection.release();
+      return null;
+    }
     connection.release();
     return result as GroupData;
   } catch (err) {
-    throw new Error("Error creating group");
+    throw err;
   }
 };
 
