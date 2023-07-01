@@ -50,6 +50,42 @@ commanderModel.create = (data) => __awaiter(void 0, void 0, void 0, function* ()
         throw err;
     }
 });
+commanderModel.update = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { mem_id, nametitle, rank, fname, lname, username } = data;
+        const connection = yield mysql_1.mysqlDB.getConnection();
+        try {
+            yield connection.beginTransaction();
+            const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+            const memData = [username, mem_id];
+            const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
+            const commanderQuery = "UPDATE Commander SET com_nametitle = ?, com_rank = ?, com_fname = ?, com_lname = ? WHERE mem_id = ? ";
+            const commanderData = [nametitle, rank, fname, lname, mem_id];
+            const [resultCom] = yield connection.query(commanderQuery, commanderData);
+            if (!resultCom) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
+            yield connection.commit();
+            connection.release();
+            return resultCom;
+        }
+        catch (err) {
+            yield connection.rollback();
+            connection.release();
+            throw err;
+        }
+    }
+    catch (err) {
+        throw err;
+    }
+});
 commanderModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
     const query = ` 
         SELECT 

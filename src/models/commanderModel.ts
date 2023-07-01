@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const SALT_ROUNDS = 10;
 
 interface CommanderData {
+  mem_id: number;
   nametitle: string;
   rank: string;
   fname: string;
@@ -57,6 +58,51 @@ commanderModel.create = async (
   }
 };
 
+commanderModel.update = async (
+  data: CommanderData
+): Promise<CommanderData | null> => {
+  try {
+    const { mem_id, nametitle, rank, fname, lname, username } = data;
+    const connection = await mysqlDB.getConnection();
+
+    try {
+      await connection.beginTransaction();
+
+      const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+      const memData = [username, mem_id];
+      const [resultMem] = await connection.query(memQuery, memData);
+      if (!resultMem) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
+
+      const commanderQuery =
+        "UPDATE Commander SET com_nametitle = ?, com_rank = ?, com_fname = ?, com_lname = ? WHERE mem_id = ? ";
+      const commanderData = [nametitle, rank, fname, lname, mem_id];
+      const [resultCom] = await connection.query(
+        commanderQuery,
+        commanderData
+      );
+      if (!resultCom) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
+
+      await connection.commit();
+      connection.release();
+      return resultCom as CommanderData;
+    } catch (err) {
+      await connection.rollback();
+      connection.release();
+      throw err;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
 commanderModel.getAll = async (): Promise<[] | null> => {
   const query = ` 
         SELECT 
@@ -66,7 +112,7 @@ commanderModel.getAll = async (): Promise<[] | null> => {
         JOIN Commander ON Member.mem_id = Commander.mem_id
   `;
   const [rows] = await mysqlDB.query(query);
-  if(!rows) return null
+  if (!rows) return null;
   return rows;
 };
 

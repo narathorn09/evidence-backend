@@ -50,6 +50,42 @@ directorModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () 
         throw err;
     }
 });
+directorModel.update = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { mem_id, nametitle, rank, fname, lname, username } = data;
+        const connection = yield mysql_1.mysqlDB.getConnection();
+        try {
+            yield connection.beginTransaction();
+            const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+            const memData = [username, mem_id];
+            const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
+            const directorQuery = "UPDATE Director SET director_nametitle = ?, director_rank = ?, director_fname = ?, director_lname = ? WHERE mem_id = ? ";
+            const directorData = [nametitle, rank, fname, lname, mem_id];
+            const [resultddirector] = yield connection.query(directorQuery, directorData);
+            if (!resultddirector) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
+            yield connection.commit();
+            connection.release();
+            return resultddirector;
+        }
+        catch (err) {
+            yield connection.rollback();
+            connection.release();
+            throw err;
+        }
+    }
+    catch (err) {
+        throw err;
+    }
+});
 directorModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
     const query = ` 
         SELECT

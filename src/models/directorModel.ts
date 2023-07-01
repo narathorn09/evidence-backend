@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const SALT_ROUNDS = 10;
 
 interface DirectorData {
+  mem_id: number;
   nametitle: string;
   rank: string;
   fname: string;
@@ -58,6 +59,51 @@ directorModel.create = async (
   }
 };
 
+directorModel.update = async (
+  data: DirectorData
+): Promise<DirectorData | null> => {
+  try {
+    const { mem_id, nametitle, rank, fname, lname, username } = data;
+    const connection = await mysqlDB.getConnection();
+
+    try {
+      await connection.beginTransaction();
+
+      const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+      const memData = [username, mem_id];
+      const [resultMem] = await connection.query(memQuery, memData);
+      if (!resultMem) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
+
+      const directorQuery =
+        "UPDATE Director SET director_nametitle = ?, director_rank = ?, director_fname = ?, director_lname = ? WHERE mem_id = ? ";
+      const directorData = [nametitle, rank, fname, lname, mem_id];
+      const [resultddirector] = await connection.query(
+        directorQuery,
+        directorData
+      );
+      if (!resultddirector) {
+        await connection.rollback();
+        connection.release();
+        return null;
+      }
+
+      await connection.commit();
+      connection.release();
+      return resultddirector as DirectorData;
+    } catch (err) {
+      await connection.rollback();
+      connection.release();
+      throw err;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
 directorModel.getAll = async (): Promise<[] | null> => {
   const query = ` 
         SELECT
@@ -67,7 +113,7 @@ directorModel.getAll = async (): Promise<[] | null> => {
         JOIN Director ON Member.mem_id = Director.mem_id
   `;
   const [rows] = await mysqlDB.query(query);
-  if(!rows) return null
+  if (!rows) return null;
   return rows;
 };
 
