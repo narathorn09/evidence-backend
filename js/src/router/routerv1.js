@@ -27,7 +27,7 @@ const create_expert_1 = __importDefault(require("../controller/admin/create-expe
 const list_expert_1 = __importDefault(require("../controller/admin/list-expert"));
 const count_member_1 = __importDefault(require("../controller/admin/count-member"));
 const count_groups_1 = __importDefault(require("../controller/admin/count-groups"));
-// import UpdateAdmin from "./controller/admin/update-admin";
+const update_admin_1 = __importDefault(require("../controller/admin/update-admin"));
 // import UpdateCommander from "./controller/admin/update-commander";
 // import UpdateDirector from "./controller/admin/update-director";
 // import GetAdminById from "../controller/admin/getbyid-admin";
@@ -41,7 +41,7 @@ routerv1.route("/countMember").get(count_member_1.default);
 routerv1.route("/countGroup").get(count_groups_1.default);
 routerv1.route("/group").post(auth_1.default, create_group_1.default).get(auth_1.default, list_group_1.default);
 routerv1.route("/groupById/:groupId").delete(auth_1.default, delete_group_1.default);
-routerv1.route("/admin").post(auth_1.default, create_admin_1.default).get(auth_1.default, list_admin_1.default);
+routerv1.route("/admin").post(auth_1.default, create_admin_1.default).get(auth_1.default, list_admin_1.default).put(update_admin_1.default);
 routerv1.route("/commander").post(auth_1.default, create_commander_1.default).get(auth_1.default, list_commander_1.default);
 routerv1.route("/director").post(auth_1.default, create_director_1.default).get(auth_1.default, list_director_1.default);
 routerv1.route("/sceneInvestigator").post(auth_1.default, create_scene_investigators_1.default).get(auth_1.default, list_scene_investigators_1.default);

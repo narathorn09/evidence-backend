@@ -17,11 +17,6 @@ const countModel_1 = __importDefault(require("../../models/countModel"));
 const CountMember = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const count = yield countModel_1.default.countAllUser();
-        if (!count)
-            return res.status(500).json({
-                status: "500",
-                message: "Error count user",
-            });
         res.status(200).json(count);
     }
     catch (err) {

@@ -43,11 +43,11 @@ countModel.countAllUser = async (): Promise<any> => {
   };
 };
 
-countModel.countGroup = async (): Promise<any> => {
-  const queryGroup = `SELECT COUNT(group_id) AS groupCount FROM GroupTable`;
-  const [result] = await mysqlDB.query(queryGroup);
-  const count = result[0]?.groupCount ?? 0;
-  return count
+countModel.countGroup = async (): Promise<number> => {
+    const queryGroup = `SELECT COUNT(group_id) AS groupCount FROM GroupTable`;
+    const [result] = await mysqlDB.query(queryGroup);
+    const count = result[0]?.groupCount ?? 0;
+    return count;
 };
 
 export default countModel;

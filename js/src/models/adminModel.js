@@ -33,11 +33,37 @@ adminModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
         catch (err) {
             yield connection.rollback();
             connection.release();
-            throw new Error("Error creating admin");
+            throw err;
         }
     }
     catch (err) {
-        throw new Error("Error creating admin");
+        throw err;
+    }
+});
+adminModel.update = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { mem_id, admin_fname, admin_lname, username } = data;
+        const connection = yield mysql_1.mysqlDB.getConnection();
+        try {
+            yield connection.beginTransaction();
+            const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+            const memData = [username, mem_id];
+            yield connection.query(memQuery, memData);
+            const adminQuery = "UPDATE Admin SET admin_fname = ?, admin_lname = ? WHERE mem_id = ? ";
+            const adminData = [admin_fname, admin_lname, mem_id];
+            const [resultAdmin] = yield connection.query(adminQuery, adminData);
+            yield connection.commit();
+            connection.release();
+            return resultAdmin;
+        }
+        catch (err) {
+            yield connection.rollback();
+            connection.release();
+            throw err;
+        }
+    }
+    catch (err) {
+        throw err;
     }
 });
 adminModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {

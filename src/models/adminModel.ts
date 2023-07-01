@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const SALT_ROUNDS = 10;
 
 interface AdminData {
+  mem_id: number;
   admin_fname: string;
   admin_lname: string;
   username: string;
@@ -15,10 +16,10 @@ adminModel.create = async (data: AdminData): Promise<AdminData | null> => {
   try {
     const { admin_fname, admin_lname, username, password } = data;
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
-    const connection = await mysqlDB.getConnection(); 
+    const connection = await mysqlDB.getConnection();
 
     try {
-      await connection.beginTransaction(); 
+      await connection.beginTransaction();
 
       const memQuery =
         "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
@@ -30,16 +31,46 @@ adminModel.create = async (data: AdminData): Promise<AdminData | null> => {
       const adminData = [admin_fname, admin_lname, resultMem.insertId];
       const [resultAdmin] = await connection.query(adminQuery, adminData);
 
-      await connection.commit(); 
-      connection.release(); 
+      await connection.commit();
+      connection.release();
       return resultAdmin as AdminData;
     } catch (err) {
-      await connection.rollback(); 
+      await connection.rollback();
       connection.release();
-      throw new Error("Error creating admin");
+      throw err;
     }
   } catch (err) {
-    throw new Error("Error creating admin");
+    throw err;
+  }
+};
+
+adminModel.update = async (data: AdminData): Promise<AdminData | null> => {
+  try {
+    const { mem_id, admin_fname, admin_lname, username } = data;
+    const connection = await mysqlDB.getConnection();
+
+    try {
+      await connection.beginTransaction();
+
+      const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+      const memData = [username, mem_id];
+      await connection.query(memQuery, memData);
+
+      const adminQuery =
+        "UPDATE Admin SET admin_fname = ?, admin_lname = ? WHERE mem_id = ? ";
+      const adminData = [admin_fname, admin_lname, mem_id];
+      const [resultAdmin] = await connection.query(adminQuery, adminData);
+
+      await connection.commit();
+      connection.release();
+      return resultAdmin as AdminData;
+    } catch (err) {
+      await connection.rollback();
+      connection.release();
+      throw err;
+    }
+  } catch (err) {
+    throw err;
   }
 };
 
