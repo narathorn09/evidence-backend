@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction } from "express";
-import { mysqlDB } from "../../db/mysql";
 import ResponseError from "../../components/responseError";
+import countModel from "../../models/countModel";
 
 const CountGroup = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const queryGroup = `SELECT COUNT(group_id) AS groupCount FROM GroupTable`;
-
-    const [result] = await mysqlDB.promise().query(queryGroup);
-
-    const countG = result[0]?.groupCount ?? 0;
-
-    res.json(countG);
+    const count = await countModel.countGroup();
+    if (!count)
+      return res.status(500).json({
+        status: "500",
+        message: "Error count group",
+      });
+    res.status(200).json(count);
   } catch (err) {
     ResponseError(err, res);
   }

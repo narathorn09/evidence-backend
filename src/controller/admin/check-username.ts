@@ -1,22 +1,18 @@
 import { Request, Response, NextFunction } from "express";
-import { mysqlDB } from "../../db/mysql";
 import ResponseError from "../../components/responseError";
+import userModel from "../../models/userModel";
 
-const CheckUsername = (req: Request, res: Response, next: NextFunction) => {
+const CheckUsername = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { username } = req.body;
-    const query = `SELECT mem_username FROM Member WHERE mem_username = ?`;
-    mysqlDB.query(query, [username], (err: any, result: any) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          status: "500",
-          message: "Error check username",
-        });
-      } else {
-        res.send(result);
-      }
-    });
+    const response = await userModel.getUserByUsername(username);
+    if (!response)
+      return res.status(200).send([]);
+      res.status(200).send(response.mem_username);
   } catch (err) {
     ResponseError(err, res);
   }

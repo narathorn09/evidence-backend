@@ -17,22 +17,22 @@ adminModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { admin_fname, admin_lname, username, password } = data;
         const hash = yield bcrypt.hash(password, SALT_ROUNDS);
-        const connection = yield mysql_1.mysqlDB.getConnection(); // Get a connection from the pool
+        const connection = yield mysql_1.mysqlDB.getConnection();
         try {
-            yield connection.beginTransaction(); // Start a transaction
+            yield connection.beginTransaction();
             const memQuery = "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
             const memData = ["0", username, hash];
             const [resultMem] = yield connection.query(memQuery, memData);
             const adminQuery = "INSERT INTO Admin (admin_fname, admin_lname, mem_id) VALUES (?, ?, ?)";
             const adminData = [admin_fname, admin_lname, resultMem.insertId];
             const [resultAdmin] = yield connection.query(adminQuery, adminData);
-            yield connection.commit(); // Commit the transaction
-            connection.release(); // Release the connection back to the pool
+            yield connection.commit();
+            connection.release();
             return resultAdmin;
         }
         catch (err) {
-            yield connection.rollback(); // Rollback the transaction in case of an error
-            connection.release(); // Release the connection back to the pool
+            yield connection.rollback();
+            connection.release();
             throw new Error("Error creating admin");
         }
     }

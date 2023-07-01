@@ -12,15 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mysql_1 = require("../../db/mysql");
 const responseError_1 = __importDefault(require("../../components/responseError"));
+const countModel_1 = __importDefault(require("../../models/countModel"));
 const CountGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
     try {
-        const queryGroup = `SELECT COUNT(group_id) AS groupCount FROM GroupTable`;
-        const [result] = yield mysql_1.mysqlDB.promise().query(queryGroup);
-        const countG = (_b = (_a = result[0]) === null || _a === void 0 ? void 0 : _a.groupCount) !== null && _b !== void 0 ? _b : 0;
-        res.json(countG);
+        const count = yield countModel_1.default.countGroup();
+        if (!count)
+            return res.status(500).json({
+                status: "500",
+                message: "Error count group",
+            });
+        res.status(200).json(count);
     }
     catch (err) {
         (0, responseError_1.default)(err, res);

@@ -1,36 +1,32 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mysql_1 = require("../../db/mysql");
 const responseError_1 = __importDefault(require("../../components/responseError"));
-const ListGroup = (req, res, next) => {
+const groupModel_1 = __importDefault(require("../../models/groupModel"));
+const ListGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const query = ` 
-    SELECT
-      g.group_id, g.group_name,
-      d.director_rank, d.director_fname, d.director_lname
-    FROM
-        GroupTable g
-    LEFT JOIN
-        Director d ON g.director_id = d.director_id;
-      `;
-        mysql_1.mysqlDB.query(query, (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.status(500).json({
-                    status: "500",
-                    message: "Error get all group",
-                });
-            }
-            else {
-                res.send(result);
-            }
-        });
+        const group = yield groupModel_1.default.getAll();
+        if (!group) {
+            return res.status(500).json({
+                status: "500",
+                message: "Error get all group",
+            });
+        }
+        res.send(group);
     }
     catch (err) {
         (0, responseError_1.default)(err, res);
     }
-};
+});
 exports.default = ListGroup;

@@ -15,10 +15,10 @@ adminModel.create = async (data: AdminData): Promise<AdminData | null> => {
   try {
     const { admin_fname, admin_lname, username, password } = data;
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
-    const connection = await mysqlDB.getConnection(); // Get a connection from the pool
+    const connection = await mysqlDB.getConnection(); 
 
     try {
-      await connection.beginTransaction(); // Start a transaction
+      await connection.beginTransaction(); 
 
       const memQuery =
         "INSERT INTO Member (mem_type, mem_username, mem_password) VALUES (?, ?, ?)";
@@ -30,13 +30,12 @@ adminModel.create = async (data: AdminData): Promise<AdminData | null> => {
       const adminData = [admin_fname, admin_lname, resultMem.insertId];
       const [resultAdmin] = await connection.query(adminQuery, adminData);
 
-      await connection.commit(); // Commit the transaction
-      connection.release(); // Release the connection back to the pool
-
+      await connection.commit(); 
+      connection.release(); 
       return resultAdmin as AdminData;
     } catch (err) {
-      await connection.rollback(); // Rollback the transaction in case of an error
-      connection.release(); // Release the connection back to the pool
+      await connection.rollback(); 
+      connection.release();
       throw new Error("Error creating admin");
     }
   } catch (err) {

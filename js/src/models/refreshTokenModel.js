@@ -35,8 +35,8 @@ refreshTokenModel.updateTokenById = (mem_id, newRefreshToken) => __awaiter(void 
         return false;
     }
 });
-refreshTokenModel.findTokenByToken = (newRefreshToken) => __awaiter(void 0, void 0, void 0, function* () {
+refreshTokenModel.findUserByToken = (newRefreshToken) => __awaiter(void 0, void 0, void 0, function* () {
     const [rows] = yield mysql_1.mysqlDB.query("SELECT * FROM RefreshToken WHERE refresh_token = ?", [newRefreshToken]);
-    return rows.length > 0;
+    return rows[0] || null;
 });
 exports.default = refreshTokenModel;

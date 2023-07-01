@@ -12,27 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mysql_1 = require("../../db/mysql");
 const responseError_1 = __importDefault(require("../../components/responseError"));
+const groupModel_1 = __importDefault(require("../../models/groupModel"));
 const CreateGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { group_name, director_id } = req.body;
-        const query = `INSERT INTO GroupTable (group_name, director_id) VALUES (?, ?)`;
-        mysql_1.mysqlDB.query(query, [group_name, director_id], (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.status(500).json({
-                    status: "500",
-                    message: "Error creating group",
-                });
-            }
-            else {
-                res.status(200).json({
-                    status: "200",
-                    message: "Director created successfully",
-                    result: result,
-                });
-            }
+        const data = { group_name, director_id };
+        const response = yield groupModel_1.default.create(data);
+        if (!response) {
+            return res.status(500).json({
+                status: "500",
+                message: "Error creating group",
+            });
+        }
+        res.status(200).json({
+            status: "200",
+            message: "Director created successfully",
         });
     }
     catch (err) {

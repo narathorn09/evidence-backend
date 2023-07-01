@@ -24,9 +24,10 @@ const HandleAccessToken = async (
       });
     }
     const refreshToken = cookies.refresh;
-    const findToken = await refreshTokenModel.findTokenByToken(refreshToken);
+    const findUserByToken = await refreshTokenModel.findUserByToken(refreshToken);
+    // console.log("findUserByToken",findUserByToken)
 
-    if (!findToken) {
+    if (!findUserByToken) {
       const decoded = await jwt.verify(refreshToken, secret);
       if (!decoded)
         return res.status(403).json({
@@ -44,7 +45,7 @@ const HandleAccessToken = async (
       });
     }
 
-    const { mem_id } = findToken;
+    const { mem_id } = findUserByToken;
     const decoded = await jwt.verify(refreshToken, secret);
     if (mem_id !== decoded.id) {
       return res.status(403).json({
@@ -55,6 +56,7 @@ const HandleAccessToken = async (
     }
 
     const user = await userModel.getUserByUsername(decoded.username);
+    // console.log("user",user);
     if (user) {
       const { mem_id, mem_type, mem_username } = user;
       const accessToken = await jwtSign(

@@ -29,8 +29,9 @@ const HandleAccessToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             });
         }
         const refreshToken = cookies.refresh;
-        const findToken = yield refreshTokenModel_1.default.findTokenByToken(refreshToken);
-        if (!findToken) {
+        const findUserByToken = yield refreshTokenModel_1.default.findUserByToken(refreshToken);
+        // console.log("findUserByToken",findUserByToken)
+        if (!findUserByToken) {
             const decoded = yield jwt.verify(refreshToken, secret);
             if (!decoded)
                 return res.status(403).json({
@@ -47,7 +48,7 @@ const HandleAccessToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 message: "Forbidden",
             });
         }
-        const { mem_id } = findToken;
+        const { mem_id } = findUserByToken;
         const decoded = yield jwt.verify(refreshToken, secret);
         if (mem_id !== decoded.id) {
             return res.status(403).json({
@@ -57,6 +58,7 @@ const HandleAccessToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             });
         }
         const user = yield userModel_1.default.getUserByUsername(decoded.username);
+        // console.log("user",user);
         if (user) {
             const { mem_id, mem_type, mem_username } = user;
             const accessToken = yield (0, jwtSign_1.jwtSign)({
