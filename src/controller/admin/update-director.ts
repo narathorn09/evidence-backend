@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import ResponseError from "../../components/responseError";
-import directorModel from "src/models/directorModel";
+import directorModel from "../../models/directorModel";
 
 const UpdateDirector = async (req: Request, res: Response, next: NextFunction) => {
   try {

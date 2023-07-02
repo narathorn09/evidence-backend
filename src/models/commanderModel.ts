@@ -116,4 +116,19 @@ commanderModel.getAll = async (): Promise<[] | null> => {
   return rows;
 };
 
+
+commanderModel.getById = async (id: number): Promise<[] | null> => {
+  const query = ` 
+        SELECT
+        Member.mem_id, Member.mem_type, Member.mem_username,
+        Commander.com_id, Commander.com_nametitle, Commander.com_rank, Commander.com_fname, Commander.com_lname
+        FROM Member
+        JOIN Commander ON Member.mem_id = Commander.mem_id
+        WHERE Member.mem_id = ? AND Commander.mem_id = ?;
+      `;
+  const [rows] = await mysqlDB.query(query, [id, id]);
+  if (!rows) return null;
+  return rows;
+};
+
 export default commanderModel;

@@ -99,4 +99,18 @@ adminModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
         return null;
     return rows;
 });
+adminModel.getById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = ` 
+        SELECT
+        Member.mem_id, Member.mem_type, Member.mem_username, 
+        Admin.admin_id, Admin.admin_fname, Admin.admin_lname
+        FROM Member
+        JOIN Admin ON Member.mem_id = Admin.mem_id
+        WHERE Member.mem_id = ? AND Admin.mem_id = ?;
+      `;
+    const [rows] = yield mysql_1.mysqlDB.query(query, [id, id]);
+    if (!rows)
+        return null;
+    return rows;
+});
 exports.default = adminModel;

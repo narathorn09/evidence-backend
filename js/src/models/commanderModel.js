@@ -99,4 +99,18 @@ commanderModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
         return null;
     return rows;
 });
+commanderModel.getById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = ` 
+        SELECT
+        Member.mem_id, Member.mem_type, Member.mem_username,
+        Commander.com_id, Commander.com_nametitle, Commander.com_rank, Commander.com_fname, Commander.com_lname
+        FROM Member
+        JOIN Commander ON Member.mem_id = Commander.mem_id
+        WHERE Member.mem_id = ? AND Commander.mem_id = ?;
+      `;
+    const [rows] = yield mysql_1.mysqlDB.query(query, [id, id]);
+    if (!rows)
+        return null;
+    return rows;
+});
 exports.default = commanderModel;

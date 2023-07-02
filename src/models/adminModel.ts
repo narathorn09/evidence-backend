@@ -103,7 +103,21 @@ adminModel.getAll = async (): Promise<[] | null> => {
         JOIN Admin ON Member.mem_id = Admin.mem_id;    
       `;
   const [rows] = await mysqlDB.query(query);
-  if(!rows) return null
+  if (!rows) return null;
+  return rows;
+};
+
+adminModel.getById = async (id: number): Promise<[] | null> => {
+  const query = ` 
+        SELECT
+        Member.mem_id, Member.mem_type, Member.mem_username, 
+        Admin.admin_id, Admin.admin_fname, Admin.admin_lname
+        FROM Member
+        JOIN Admin ON Member.mem_id = Admin.mem_id
+        WHERE Member.mem_id = ? AND Admin.mem_id = ?;
+      `;
+  const [rows] = await mysqlDB.query(query, [id, id]);
+  if (!rows) return null;
   return rows;
 };
 

@@ -13,26 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const responseError_1 = __importDefault(require("../../components/responseError"));
-const directorModel_1 = __importDefault(require("../../models/directorModel"));
-const UpdateDirector = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const commanderModel_1 = __importDefault(require("../../models/commanderModel"));
+const GetCommanderById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { mem_id, nametitle, rank, fname, lname, username } = req.body;
-        const data = { mem_id, nametitle, rank, fname, lname, username };
-        const update = yield directorModel_1.default.update(data);
-        if (!update) {
-            res.status(500).json({
+        const { memId } = req.params;
+        const commander = yield commanderModel_1.default.getById(memId);
+        if (!commander) {
+            return res.status(500).json({
                 status: "500",
-                message: "Error update director",
+                message: "Error get commander by Id",
             });
-            return;
         }
-        res.status(200).json({
-            status: "200",
-            message: "Director update successfully",
-        });
+        res.send(commander);
     }
     catch (err) {
         (0, responseError_1.default)(err, res);
     }
 });
-exports.default = UpdateDirector;
+exports.default = GetCommanderById;
