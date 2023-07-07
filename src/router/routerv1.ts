@@ -45,12 +45,13 @@ routerv1.route("/login").post(Login);
 routerv1.route("/logout").get(Logout);
 routerv1.route("/accesstoken").get(HandleAccessToken);
 
+// admin
 routerv1.route("/checkUsername").post(CheckUsername);
 routerv1.route("/countMember").get(CountMember);
 routerv1.route("/countGroup").get(CountGroup);
 routerv1.route("/group").post(Auth,CreateGroup).get(Auth,ListGroup).put(Auth,UpdateGroup)
 routerv1.route("/groupById/:groupId").get(Auth, GetGroupById).delete(Auth, DeleteGroup)
-routerv1.route("/admin").post(Auth,CreateAdmin).get(Auth,ListAdmin).put(Auth,UpdateAdmin)
+routerv1.route("/admin").post(CreateAdmin).get(Auth,ListAdmin).put(Auth,UpdateAdmin)
 routerv1.route("/commander").post(Auth,CreateCommander).get(Auth,ListCommander).put(Auth,UpdateCommander)
 routerv1.route("/director").post(Auth,CreateDirector).get(Auth,ListDirector).put(Auth,UpdateDirector)
 routerv1.route("/sceneInvestigator").post(Auth,CreateSceneInvestigator).get(Auth,ListSceneInvestigator).put(Auth,UpdateSceneInvestigator)

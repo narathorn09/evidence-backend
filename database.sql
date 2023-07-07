@@ -132,3 +132,12 @@ CREATE TABLE Assign (
     FOREIGN KEY (group_id) REFERENCES GroupTable(group_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (expert_id) REFERENCES Expert(expert_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+INSERT INTO GroupTable (group_name, director_id)
+VALUES ('กลุ่มงานตรวจสถานที่เกิดเหตุ', NULL),
+       ('กลุ่มงานตรวจอาวุธปืนและเครื่องกระสุน', NULL),
+       ('กลุ่มงานตรวจยาเสพติด', NULL),
+       ('กลุ่มงานตรวจลายนิ้วมือแฝง', NULL),
+       ('กลุ่มงานตรวจพิสูจน์ทางเคมีฟิสิกส์', NULL),
+       ('กลุ่มงานตรวจชีววิทยาและดีเอ็นเอ', NULL),
+       ('กลุ่มงานผู้เชี่ยวชาญ', NULL);

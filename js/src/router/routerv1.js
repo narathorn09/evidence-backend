@@ -44,12 +44,13 @@ routerv1.route("/me").get(controller_2.default);
 routerv1.route("/login").post(controller_4.default);
 routerv1.route("/logout").get(controller_3.default);
 routerv1.route("/accesstoken").get(controller_1.default);
+// admin
 routerv1.route("/checkUsername").post(check_username_1.default);
 routerv1.route("/countMember").get(count_member_1.default);
 routerv1.route("/countGroup").get(count_groups_1.default);
 routerv1.route("/group").post(auth_1.default, create_group_1.default).get(auth_1.default, list_group_1.default).put(auth_1.default, update_group_1.default);
 routerv1.route("/groupById/:groupId").get(auth_1.default, getbyid_group_1.default).delete(auth_1.default, delete_group_1.default);
-routerv1.route("/admin").post(auth_1.default, create_admin_1.default).get(auth_1.default, list_admin_1.default).put(auth_1.default, update_admin_1.default);
+routerv1.route("/admin").post(create_admin_1.default).get(auth_1.default, list_admin_1.default).put(auth_1.default, update_admin_1.default);
 routerv1.route("/commander").post(auth_1.default, create_commander_1.default).get(auth_1.default, list_commander_1.default).put(auth_1.default, update_commander_1.default);
 routerv1.route("/director").post(auth_1.default, create_director_1.default).get(auth_1.default, list_director_1.default).put(auth_1.default, update_director_1.default);
 routerv1.route("/sceneInvestigator").post(auth_1.default, create_scene_investigators_1.default).get(auth_1.default, list_scene_investigators_1.default).put(auth_1.default, update_scene_investigators_1.default);
