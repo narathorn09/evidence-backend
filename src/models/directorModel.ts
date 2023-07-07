@@ -117,4 +117,18 @@ directorModel.getAll = async (): Promise<[] | null> => {
   return rows;
 };
 
+directorModel.getById = async (id: number): Promise<[] | null> => {
+  const query = ` 
+        SELECT
+        Member.mem_id, Member.mem_type, Member.mem_username,
+        Director.director_id, Director.director_nametitle, Director.director_rank, Director.director_fname, Director.director_lname
+        FROM Member
+        JOIN Director ON Member.mem_id = Director.mem_id
+        WHERE Member.mem_id = ? AND Director.mem_id = ?;
+      `;
+  const [rows] = await mysqlDB.query(query, [id, id]);
+  if (!rows) return null;
+  return rows;
+};
+
 export default directorModel;

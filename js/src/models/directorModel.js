@@ -99,4 +99,18 @@ directorModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
         return null;
     return rows;
 });
+directorModel.getById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = ` 
+        SELECT
+        Member.mem_id, Member.mem_type, Member.mem_username,
+        Director.director_id, Director.director_nametitle, Director.director_rank, Director.director_fname, Director.director_lname
+        FROM Member
+        JOIN Director ON Member.mem_id = Director.mem_id
+        WHERE Member.mem_id = ? AND Director.mem_id = ?;
+      `;
+    const [rows] = yield mysql_1.mysqlDB.query(query, [id, id]);
+    if (!rows)
+        return null;
+    return rows;
+});
 exports.default = directorModel;

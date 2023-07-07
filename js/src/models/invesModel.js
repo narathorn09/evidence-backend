@@ -57,6 +57,42 @@ invesModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
         throw err;
     }
 });
+invesModel.update = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { mem_id, nametitle, rank, fname, lname, username, groupid } = data;
+        const connection = yield mysql_1.mysqlDB.getConnection();
+        try {
+            yield connection.beginTransaction();
+            const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+            const memData = [username, mem_id];
+            const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
+            const invesQuery = "UPDATE Scene_investigators SET inves_nametitle = ?, inves_rank = ?, inves_fname = ?, inves_lname = ?, group_id = ? WHERE mem_id = ?";
+            const invesData = [nametitle, rank, fname, lname, groupid, mem_id];
+            const [result] = yield connection.query(invesQuery, invesData);
+            if (!result) {
+                yield connection.rollback();
+                connection.release();
+                return null;
+            }
+            yield connection.commit();
+            connection.release();
+            return result;
+        }
+        catch (err) {
+            yield connection.rollback();
+            connection.release();
+            throw err;
+        }
+    }
+    catch (err) {
+        throw err;
+    }
+});
 invesModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
     const query = ` 
     SELECT
@@ -70,9 +106,28 @@ invesModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
         Scene_investigators ON Member.mem_id = Scene_investigators.mem_id
     LEFT JOIN
         GroupTable ON Scene_investigators.group_id = GroupTable.group_id;
-
   `;
     const [rows] = yield mysql_1.mysqlDB.query(query);
+    if (!rows)
+        return null;
+    return rows;
+});
+invesModel.getById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = ` 
+  SELECT
+    Member.mem_id, Member.mem_type, Member.mem_username,
+    Scene_investigators.inves_id, Scene_investigators.inves_nametitle, Scene_investigators.inves_rank,
+    Scene_investigators.inves_fname, Scene_investigators.inves_lname,
+    Scene_investigators.group_id, GroupTable.group_name
+  FROM
+    Member
+  JOIN
+    Scene_investigators ON Member.mem_id = Scene_investigators.mem_id
+  LEFT JOIN
+    GroupTable ON Scene_investigators.group_id = GroupTable.group_id
+  WHERE Member.mem_id = ? AND Scene_investigators.mem_id = ?;
+      `;
+    const [rows] = yield mysql_1.mysqlDB.query(query, [id, id]);
     if (!rows)
         return null;
     return rows;
