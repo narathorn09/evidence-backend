@@ -36,7 +36,7 @@ import GetExpertById from "../controller/admin/getbyid-expert";
 import UpdateExpert from "../controller/admin/update-expert";
 import GetGroupById from "../controller/admin/getbyid-group";
 import UpdateGroup from "../controller/admin/update-group";
-
+import UpdateProfile from "../controller/me/update-profile";
 
 const routerv1 = Router();
 
@@ -44,7 +44,7 @@ routerv1.route("/me").get(GetMe);
 routerv1.route("/login").post(Login);
 routerv1.route("/logout").get(Logout);
 routerv1.route("/accesstoken").get(HandleAccessToken);
-
+routerv1.route("/profile").put(Auth, UpdateProfile);
 // admin
 routerv1.route("/checkUsername").post(CheckUsername);
 routerv1.route("/countMember").get(CountMember);

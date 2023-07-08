@@ -73,6 +73,61 @@ userModel.getMe = (decode) => __awaiter(void 0, void 0, void 0, function* () {
             member.expert_rank,
     };
 });
+userModel.updateProfile = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, role, fname, lname, username } = data;
+    let query = "";
+    let queryData = [fname, lname, id];
+    switch (role) {
+        case "0": //admin
+            query = `UPDATE Admin SET admin_fname = ?, admin_lname = ? WHERE mem_id = ? `;
+            break;
+        case "1": //commander
+            query = "UPDATE Commander SET com_fname = ?, com_lname = ? WHERE mem_id = ? ";
+            break;
+        case "2": //Scene Investigator
+            query = "UPDATE Scene_investigators SET inves_fname = ?, inves_lname = ? WHERE mem_id = ?";
+            break;
+        case "3": //Director
+            query = "UPDATE Director SET director_fname = ?, director_lname = ? WHERE mem_id = ? ";
+            break;
+        case "4": //Expert
+            query = "UPDATE Expert SET expert_fname = ?, expert_lname = ? WHERE mem_id = ?";
+            break;
+        default:
+            return false;
+    }
+    try {
+        const connection = yield mysql_1.mysqlDB.getConnection();
+        try {
+            yield connection.beginTransaction();
+            const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+            const memData = [username, id];
+            const [resultMem] = yield connection.query(memQuery, memData);
+            if (!resultMem) {
+                yield connection.rollback();
+                connection.release();
+                return false;
+            }
+            const [rows] = yield mysql_1.mysqlDB.query(query, queryData);
+            if (!rows) {
+                yield connection.rollback();
+                connection.release();
+                return false;
+            }
+            yield connection.commit();
+            yield connection.release();
+            return true;
+        }
+        catch (err) {
+            yield connection.rollback();
+            yield connection.release();
+            throw err;
+        }
+    }
+    catch (err) {
+        throw err;
+    }
+});
 userModel.logout = (refreshToken) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `SELECT * FROM RefreshToken WHERE refresh_token = ?`;
     const [rows] = yield mysql_1.mysqlDB.query(query, [refreshToken]);
