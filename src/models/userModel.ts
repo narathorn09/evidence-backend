@@ -31,6 +31,16 @@ userModel.getUserByUsername = async (
   return rows.length > 0 ? rows[0] : null;
 };
 
+userModel.getUserById = async (
+  id: number
+): Promise<User | null> => {
+  const [rows] = await mysqlDB.query(
+    "SELECT * FROM Member WHERE mem_id = ?",
+    [id]
+  );
+  return rows.length > 0 ? rows[0] : null;
+};
+
 userModel.deleteUserById = async (memId: number): Promise<boolean> => {
   const query = `DELETE FROM Member WHERE mem_id=${memId}`;
   const [rows] = await mysqlDB.query(query);
@@ -95,35 +105,38 @@ userModel.getMe = async (decode: any): Promise<Me | null> => {
       member.director_rank ||
       member.inves_rank ||
       member.expert_rank,
-    groupid:
-      member.group_id
+    groupid: member.group_id,
   };
 };
 
 userModel.updateProfile = async (data: any): Promise<boolean> => {
-  const { id, role, fname, lname, username, nametitle, rank} = data;
+  const { id, role, fname, lname, username, nametitle, rank } = data;
   let query = "";
-  let  queryData: any= []
+  let queryData: any = [];
   switch (role) {
     case "0": //admin
       query = `UPDATE Admin SET admin_fname = ?, admin_lname = ? WHERE mem_id = ? `;
-      queryData = [fname, lname, id]
+      queryData = [fname, lname, id];
       break;
     case "1": //commander
-      query = "UPDATE Commander SET com_fname = ?, com_lname = ?, com_nametitle = ?, com_rank = ? WHERE mem_id = ? ";
-      queryData = [fname, lname, nametitle, rank, id]
+      query =
+        "UPDATE Commander SET com_fname = ?, com_lname = ?, com_nametitle = ?, com_rank = ? WHERE mem_id = ? ";
+      queryData = [fname, lname, nametitle, rank, id];
       break;
     case "2": //Scene Investigator
-      query = "UPDATE Scene_investigators SET inves_fname = ?, inves_lname = ?, inves_nametitle = ?, inves_rank = ? WHERE mem_id = ?";
-      queryData = [fname, lname, nametitle, rank, id]
+      query =
+        "UPDATE Scene_investigators SET inves_fname = ?, inves_lname = ?, inves_nametitle = ?, inves_rank = ? WHERE mem_id = ?";
+      queryData = [fname, lname, nametitle, rank, id];
       break;
     case "3": //Director
-      query = "UPDATE Director SET director_fname = ?, director_lname = ?, director_nametitle = ?, director_rank = ? WHERE mem_id = ? ";
-      queryData = [fname, lname, nametitle, rank, id]
+      query =
+        "UPDATE Director SET director_fname = ?, director_lname = ?, director_nametitle = ?, director_rank = ? WHERE mem_id = ? ";
+      queryData = [fname, lname, nametitle, rank, id];
       break;
     case "4": //Expert
-      query = "UPDATE Expert SET expert_fname = ?, expert_lname = ?, expert_nametitle = ?, expert_rank = ? WHERE mem_id = ?";
-      queryData = [fname, lname, nametitle, rank, id]
+      query =
+        "UPDATE Expert SET expert_fname = ?, expert_lname = ?, expert_nametitle = ?, expert_rank = ? WHERE mem_id = ?";
+      queryData = [fname, lname, nametitle, rank, id];
       break;
     default:
       return false;
@@ -150,8 +163,7 @@ userModel.updateProfile = async (data: any): Promise<boolean> => {
       }
       await connection.commit();
       await connection.release();
-      return true
-
+      return true;
     } catch (err) {
       await connection.rollback();
       await connection.release();
@@ -160,7 +172,27 @@ userModel.updateProfile = async (data: any): Promise<boolean> => {
   } catch (err) {
     throw err;
   }
+};
 
+userModel.updatePassword = async (data: any): Promise<boolean> => {
+  try {
+    const { id, new_password } = data;
+    const SALT_ROUNDS = 10;
+    const hash = await bcrypt.hash(new_password, SALT_ROUNDS);
+    const connection = await mysqlDB.getConnection();
+
+    const memQuery = "UPDATE Member SET mem_password = ? WHERE mem_id = ?";
+    const memData = [hash, id];
+    const [result] = await connection.query(memQuery, memData);
+    if (!result) {
+      connection.release();
+      return false;
+    }
+    await connection.release();
+    return true;
+  } catch (err) {
+    throw err;
+  }
 };
 
 userModel.logout = async (refreshToken: string): Promise<any> => {

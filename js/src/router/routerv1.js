@@ -40,12 +40,14 @@ const update_expert_1 = __importDefault(require("../controller/admin/update-expe
 const getbyid_group_1 = __importDefault(require("../controller/admin/getbyid-group"));
 const update_group_1 = __importDefault(require("../controller/admin/update-group"));
 const update_profile_1 = __importDefault(require("../controller/me/update-profile"));
+const update_password_1 = __importDefault(require("../controller/me/update-password"));
 const routerv1 = (0, express_1.Router)();
 routerv1.route("/me").get(controller_2.default);
 routerv1.route("/login").post(controller_4.default);
 routerv1.route("/logout").get(controller_3.default);
 routerv1.route("/accesstoken").get(controller_1.default);
 routerv1.route("/profile").put(auth_1.default, update_profile_1.default);
+routerv1.route("/password").put(auth_1.default, update_password_1.default);
 // admin
 routerv1.route("/checkUsername").post(check_username_1.default);
 routerv1.route("/countMember").get(count_member_1.default);

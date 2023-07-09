@@ -16,6 +16,10 @@ userModel.getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, fu
     const [rows] = yield mysql_1.mysqlDB.query("SELECT * FROM Member WHERE mem_username = ?", [username]);
     return rows.length > 0 ? rows[0] : null;
 });
+userModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const [rows] = yield mysql_1.mysqlDB.query("SELECT * FROM Member WHERE mem_id = ?", [id]);
+    return rows.length > 0 ? rows[0] : null;
+});
 userModel.deleteUserById = (memId) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `DELETE FROM Member WHERE mem_id=${memId}`;
     const [rows] = yield mysql_1.mysqlDB.query(query);
@@ -71,7 +75,7 @@ userModel.getMe = (decode) => __awaiter(void 0, void 0, void 0, function* () {
             member.director_rank ||
             member.inves_rank ||
             member.expert_rank,
-        groupid: member.group_id
+        groupid: member.group_id,
     };
 });
 userModel.updateProfile = (data) => __awaiter(void 0, void 0, void 0, function* () {
@@ -84,19 +88,23 @@ userModel.updateProfile = (data) => __awaiter(void 0, void 0, void 0, function* 
             queryData = [fname, lname, id];
             break;
         case "1": //commander
-            query = "UPDATE Commander SET com_fname = ?, com_lname = ?, com_nametitle = ?, com_rank = ? WHERE mem_id = ? ";
+            query =
+                "UPDATE Commander SET com_fname = ?, com_lname = ?, com_nametitle = ?, com_rank = ? WHERE mem_id = ? ";
             queryData = [fname, lname, nametitle, rank, id];
             break;
         case "2": //Scene Investigator
-            query = "UPDATE Scene_investigators SET inves_fname = ?, inves_lname = ?, inves_nametitle = ?, inves_rank = ? WHERE mem_id = ?";
+            query =
+                "UPDATE Scene_investigators SET inves_fname = ?, inves_lname = ?, inves_nametitle = ?, inves_rank = ? WHERE mem_id = ?";
             queryData = [fname, lname, nametitle, rank, id];
             break;
         case "3": //Director
-            query = "UPDATE Director SET director_fname = ?, director_lname = ?, director_nametitle = ?, director_rank = ? WHERE mem_id = ? ";
+            query =
+                "UPDATE Director SET director_fname = ?, director_lname = ?, director_nametitle = ?, director_rank = ? WHERE mem_id = ? ";
             queryData = [fname, lname, nametitle, rank, id];
             break;
         case "4": //Expert
-            query = "UPDATE Expert SET expert_fname = ?, expert_lname = ?, expert_nametitle = ?, expert_rank = ? WHERE mem_id = ?";
+            query =
+                "UPDATE Expert SET expert_fname = ?, expert_lname = ?, expert_nametitle = ?, expert_rank = ? WHERE mem_id = ?";
             queryData = [fname, lname, nametitle, rank, id];
             break;
         default:
@@ -129,6 +137,26 @@ userModel.updateProfile = (data) => __awaiter(void 0, void 0, void 0, function* 
             yield connection.release();
             throw err;
         }
+    }
+    catch (err) {
+        throw err;
+    }
+});
+userModel.updatePassword = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id, new_password } = data;
+        const SALT_ROUNDS = 10;
+        const hash = yield bcrypt.hash(new_password, SALT_ROUNDS);
+        const connection = yield mysql_1.mysqlDB.getConnection();
+        const memQuery = "UPDATE Member SET mem_password = ? WHERE mem_id = ?";
+        const memData = [hash, id];
+        const [result] = yield connection.query(memQuery, memData);
+        if (!result) {
+            connection.release();
+            return false;
+        }
+        yield connection.release();
+        return true;
     }
     catch (err) {
         throw err;
