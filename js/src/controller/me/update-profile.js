@@ -16,8 +16,8 @@ const responseError_1 = __importDefault(require("../../components/responseError"
 const userModel_1 = __importDefault(require("../../models/userModel"));
 const UpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id, role, fname, lname, username } = req.body;
-        const data = { id, role, fname, lname, username };
+        const { id, role, fname, lname, username, nametitle, rank } = req.body;
+        const data = { id, role, fname, lname, username, nametitle, rank };
         const response = yield userModel_1.default.updateProfile(data);
         if (!response) {
             return res.status(500).json({

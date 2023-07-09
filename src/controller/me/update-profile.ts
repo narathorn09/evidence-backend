@@ -4,8 +4,8 @@ import userModel from "../../models/userModel";
 
 const UpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id, role, fname, lname, username } = req.body;
-    const data = { id, role, fname, lname, username };
+    const { id, role, fname, lname, username, nametitle, rank } = req.body;
+    const data = { id, role, fname, lname, username , nametitle, rank };
     const response = await userModel.updateProfile(data);
     if (!response) {
       return res.status(500).json({

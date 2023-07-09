@@ -16,6 +16,7 @@ interface Me {
   lname: string;
   nametitle: string;
   rank: string;
+  groupid: number;
 }
 
 const userModel: any = {};
@@ -94,28 +95,35 @@ userModel.getMe = async (decode: any): Promise<Me | null> => {
       member.director_rank ||
       member.inves_rank ||
       member.expert_rank,
+    groupid:
+      member.group_id
   };
 };
 
 userModel.updateProfile = async (data: any): Promise<boolean> => {
-  const { id, role, fname, lname, username } = data;
+  const { id, role, fname, lname, username, nametitle, rank} = data;
   let query = "";
-  let  queryData = [fname, lname, id]
+  let  queryData: any= []
   switch (role) {
     case "0": //admin
       query = `UPDATE Admin SET admin_fname = ?, admin_lname = ? WHERE mem_id = ? `;
+      queryData = [fname, lname, id]
       break;
     case "1": //commander
-      query = "UPDATE Commander SET com_fname = ?, com_lname = ? WHERE mem_id = ? ";
+      query = "UPDATE Commander SET com_fname = ?, com_lname = ?, com_nametitle = ?, com_rank = ? WHERE mem_id = ? ";
+      queryData = [fname, lname, nametitle, rank, id]
       break;
     case "2": //Scene Investigator
-      query = "UPDATE Scene_investigators SET inves_fname = ?, inves_lname = ? WHERE mem_id = ?";
+      query = "UPDATE Scene_investigators SET inves_fname = ?, inves_lname = ?, inves_nametitle = ?, inves_rank = ? WHERE mem_id = ?";
+      queryData = [fname, lname, nametitle, rank, id]
       break;
     case "3": //Director
-      query = "UPDATE Director SET director_fname = ?, director_lname = ? WHERE mem_id = ? ";
+      query = "UPDATE Director SET director_fname = ?, director_lname = ?, director_nametitle = ?, director_rank = ? WHERE mem_id = ? ";
+      queryData = [fname, lname, nametitle, rank, id]
       break;
     case "4": //Expert
-      query = "UPDATE Expert SET expert_fname = ?, expert_lname = ? WHERE mem_id = ?";
+      query = "UPDATE Expert SET expert_fname = ?, expert_lname = ?, expert_nametitle = ?, expert_rank = ? WHERE mem_id = ?";
+      queryData = [fname, lname, nametitle, rank, id]
       break;
     default:
       return false;
