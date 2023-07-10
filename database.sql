@@ -140,17 +140,54 @@ CREATE TABLE Assign (
     FOREIGN KEY (expert_id) REFERENCES Expert(expert_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+
+-- Adding a Director
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc1', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นาย', 'พ.ต.อ', 'John', 'Doe', @last_member_id);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc2', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นาง', 'พ.ต.อ', 'Sofa', 'Gone', @last_member_id);
+
+-- Adding a Group
 INSERT INTO GroupTable (group_name, director_id)
-VALUES ('กลุ่มงานตรวจสถานที่เกิดเหตุ', NULL),
+VALUES ('กลุ่มงานตรวจสถานที่เกิดเหตุ', 1),
        ('กลุ่มงานตรวจอาวุธปืนและเครื่องกระสุน', NULL),
        ('กลุ่มงานตรวจยาเสพติด', NULL),
        ('กลุ่มงานตรวจลายนิ้วมือแฝง', NULL),
        ('กลุ่มงานตรวจพิสูจน์ทางเคมีฟิสิกส์', NULL),
-       ('กลุ่มงานตรวจชีววิทยาและดีเอ็นเอ', NULL),
+       ('กลุ่มงานตรวจชีววิทยาและดีเอ็นเอ', 2),
        ('กลุ่มงานผู้เชี่ยวชาญ', NULL);
 
+-- Adding a Admin
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('0', 'admin', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Admin (admin_fname, admin_lname, mem_id)
 VALUES ('Narathorn', 'Noophum', @last_member_id);
+
+-- Adding a Commander
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('1', 'com', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+VALUES ('นาย', 'พล.ต.ต.', 'นราธร', 'หนูพุ่ม', @last_member_id);
+
+-- Adding a Scene Investigator
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นางสาว', 'ร.ต.อ.', 'Jane', 'Smith', @last_member_id, 1);
+
+-- Adding an Expert
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นาง', 'ร.ต.ต.', 'Emily', 'Johnson', @last_member_id, 6);
