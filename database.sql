@@ -152,5 +152,5 @@ VALUES ('กลุ่มงานตรวจสถานที่เกิด�
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('0', 'admin', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
-INSERT INTO Admin (admin_fname, admin_lname, mem_id,)
+INSERT INTO Admin (admin_fname, admin_lname, mem_id)
 VALUES ('Narathorn', 'Noophum', @last_member_id);
