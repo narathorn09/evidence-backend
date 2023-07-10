@@ -143,16 +143,64 @@ CREATE TABLE Assign (
 
 -- Adding a Director
 INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นางสาว', 'พ.ต.อ', 'ปิยวรรณ', 'อารักษ์คุณากร', @last_member_id);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('3', 'direc1', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
-VALUES ('นาย', 'พ.ต.อ', 'John', 'Doe', @last_member_id);
+VALUES ('นาย', 'พ.ต.อ', 'ธนาธิป', 'กลิ่นโพธิ์', @last_member_id);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('3', 'direc2', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
-VALUES ('นาง', 'พ.ต.อ', 'Sofa', 'Gone', @last_member_id);
+VALUES ('นาย', 'พ.ต.อ', 'ภาธร', 'ปิติโอภาสพงศ์', @last_member_id);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc3', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นาย', 'พ.ต.อ', 'จักรภพ', 'แสงกระจ่าง', @last_member_id);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc4', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นางสาว', 'พ.ต.อ', 'ณัฏฐกานต์', 'ธนเจริญกิจ', @last_member_id);                                                                                                   
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc5', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นาง', 'พ.ต.อ', 'สุชาดา', 'พิกุลเทพ', @last_member_id);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc6', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นาย', 'พ.ต.อ', 'วีระศักดิ์', 'เกียรติโกศล', @last_member_id);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc7', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นาย', 'พ.ต.อ', 'บดินทร์', 'ผ่องรักษา', @last_member_id);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc8', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นาย', 'พ.ต.อ', 'เอกภพ', 'อุดมภักดิ์', @last_member_id);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('3', 'direc9', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Director (director_nametitle, director_rank, director_fname, director_lname, mem_id)
+VALUES ('นาย', 'พ.ต.อ', 'วีรชัย', 'วงศ์ทิพย์', @last_member_id);
 
 -- Adding a Group
 INSERT INTO GroupTable (group_name, director_id)
@@ -169,25 +217,189 @@ INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('0', 'admin', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Admin (admin_fname, admin_lname, mem_id)
-VALUES ('Narathorn', 'Noophum', @last_member_id);
+VALUES ('นราธร', 'หนูพุ่ม', @last_member_id);
 
 -- Adding a Commander
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('1', 'com', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
-VALUES ('นาย', 'พล.ต.ต.', 'นราธร', 'หนูพุ่ม', @last_member_id);
+VALUES ('นาย', 'พล.ต.ต.', 'เจตพัทธ์', 'ทรัพย์มา', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com1', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นาง', 'พล.ต.ต.', 'Awatchana', 'Sukrungruaeng', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com2', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นางสาว', 'พล.ต.ต.', 'Areeya', 'Chongsatientam', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com3', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นาย', 'พล.ต.ต.', 'Arnut', 'Charoonudomsuk', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com4', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นาย', 'พล.ต.ต.', 'Supat', 'Suanchan', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com5', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นาง', 'พล.ต.ต.', 'Suthisa', 'Tabiek', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com6', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นาย', 'พล.ต.ต.', 'Supat', 'Suanchan', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com7', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นางสาว', 'พล.ต.ต.', 'Sophida', 'Kueanongkhun', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com8', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นาย', 'พล.ต.ต.', 'Siripong', 'Kulsukrangsan', @last_member_id);
+
+-- INSERT INTO Member (mem_type, mem_username, mem_password)
+-- VALUES ('1', 'com9', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+-- SET @last_member_id = LAST_INSERT_ID();
+-- INSERT INTO Commander (com_nametitle, com_rank, com_fname, com_lname, mem_id)
+-- VALUES ('นาย', 'พล.ต.ต.', 'Sukson', 'Chaiyarat', @last_member_id);
+
 
 -- Adding a Scene Investigator
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('2', 'inves', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
-VALUES ('นางสาว', 'ร.ต.อ.', 'Jane', 'Smith', @last_member_id, 1);
+VALUES ('นางสาว', 'ร.ต.อ.', 'ฐิตาภา', 'ปัทมเดชา', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves1', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นาง', 'ร.ต.อ.', 'อภิลดา', 'พุ่มสนธิ', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves2', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นางสาว', 'ร.ต.อ.', 'ณัฐวดี', 'วีระกิตติ', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves3', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นาย', 'พ.ต.ท', 'ภูวดี', 'สันติกสุล', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves4', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นางสาว', 'พ.ต.ต.', 'ปิยะดา', 'ปราสาทงาม', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves5', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นาย', 'พ.ต.อ', 'ณภัทร', 'จรัสวงศ์', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves6', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นางสาว', 'ร.ต.ท.', 'สุนิษา', 'พัฒนปรีชา', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves7', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นางสาว', 'พ.ต.ต.', 'เรยา', 'รุ่งฤดี', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves8', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นางสาว', 'ร.ต.อ.', 'ปรียาภัทร', 'รัศมีโชติ', @last_member_id, 1);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('2', 'inves9', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Scene_investigators (inves_nametitle, inves_rank, inves_fname, inves_lname, mem_id, group_id)
+VALUES ('นาย', 'ร.ต.อ.', 'ติณณภพ', 'โตศิลา', @last_member_id, 1);
+
 
 -- Adding an Expert
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาง', 'ร.ต.ต.', 'Emily', 'Johnson', @last_member_id, 6);
+VALUES ('นาง', 'ร.ต.ต.', 'ลักษ์วิสา', 'รัศมีโชติ', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert1', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นาง', 'ร.ต.ต.', 'ชมพู', 'วงศ์ทิพย์ ', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert2', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นางสาว', 'ร.ต.ต.', 'วิมลพร', 'รัศมีโชติ', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert3', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นาย', ' ร.ต.ท.', 'ธนิตย์', 'อุดมเสก', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert4', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นาย', ' พ.ต.ต.', 'ยศภัทร', 'ทรัพย์ศิลา', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert5', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นางสาว', 'ร.ต.ท.', 'กมลฉันท์', 'ธนเจริญกิจ', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert6', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นาย', ' ร.ต.อ.', 'ชยพล', 'งามขวัญ', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert7', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นาง', 'ร.ต.ต.', 'ปาณิศา', 'นันทวัฒน์', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert8', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นาง', ' ร.ต.ท.', 'กิรณา', 'สันติกสุล', @last_member_id, 6);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('4', 'expert9', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
+VALUES ('นาย', 'ร.ต.ต.', 'สิรภพ', 'ขจรศักดิ์โกศล', @last_member_id, 6);
