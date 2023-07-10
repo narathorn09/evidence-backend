@@ -59,12 +59,6 @@ CREATE TABLE GroupTable (
     FOREIGN KEY (director_id) REFERENCES Director(director_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
-CREATE TABLE Type_Evidence (
-    type_e_id INT AUTO_INCREMENT,
-    type_e_name VARCHAR(50) NOT NULL,
-    PRIMARY KEY (type_e_id)
-);
-
 CREATE TABLE Scene_investigators (
     inves_id INT AUTO_INCREMENT,
     inves_nametitle VARCHAR(6) NOT NULL,
@@ -106,17 +100,30 @@ CREATE TABLE CaseTable (
     FOREIGN KEY (inves_id) REFERENCES Scene_investigators(inves_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+CREATE TABLE Type_Evidence (
+    type_e_id INT AUTO_INCREMENT,
+    type_e_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (type_e_id)
+);
+
 CREATE TABLE Evidence (
     evidence_id INT AUTO_INCREMENT,
     evidence_amount INT NOT NULL,
-    evidence_photo VARCHAR(20) NOT NULL,
-    evidence_detail VARCHAR(150) NOT NULL,
-    evidence_status CHAR(1) NOT NULL,
     case_id INT NOT NULL,
     type_e_id INT NULL,
     PRIMARY KEY (evidence_id),
     FOREIGN KEY (case_id) REFERENCES CaseTable(case_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (type_e_id) REFERENCES Type_Evidence(type_e_id) ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE TABLE Evidence_Factor (
+    ef_id INT AUTO_INCREMENT,
+    ef_photo VARCHAR(20) NOT NULL,
+    ef_detail VARCHAR(150) NULL,
+    ef_status CHAR(1) NOT NULL,
+    evidence_id INT NULL,
+    PRIMARY KEY (ef_id),
+    FOREIGN KEY (evidence_id) REFERENCES Evidence(evidence_id) ON UPDATE CASCADE ON DELETE CASCADE,
 );
 
 CREATE TABLE Assign (
@@ -141,3 +148,9 @@ VALUES ('กลุ่มงานตรวจสถานที่เกิด�
        ('กลุ่มงานตรวจพิสูจน์ทางเคมีฟิสิกส์', NULL),
        ('กลุ่มงานตรวจชีววิทยาและดีเอ็นเอ', NULL),
        ('กลุ่มงานผู้เชี่ยวชาญ', NULL);
+
+INSERT INTO Member (mem_type, mem_username, mem_password)
+VALUES ('0', 'admin', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
+SET @last_member_id = LAST_INSERT_ID();
+INSERT INTO Admin (admin_fname, admin_lname, mem_id,)
+VALUES ('Narathorn', 'Noophum', @last_member_id);
