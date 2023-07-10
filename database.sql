@@ -123,7 +123,7 @@ CREATE TABLE Evidence_Factor (
     ef_status CHAR(1) NOT NULL,
     evidence_id INT NULL,
     PRIMARY KEY (ef_id),
-    FOREIGN KEY (evidence_id) REFERENCES Evidence(evidence_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (evidence_id) REFERENCES Evidence(evidence_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Assign (
