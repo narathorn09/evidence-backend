@@ -41,6 +41,11 @@ const getbyid_group_1 = __importDefault(require("../controller/admin/getbyid-gro
 const update_group_1 = __importDefault(require("../controller/admin/update-group"));
 const update_profile_1 = __importDefault(require("../controller/me/update-profile"));
 const update_password_1 = __importDefault(require("../controller/me/update-password"));
+const create_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/create-typeEvidence"));
+const update_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/update-typeEvidence"));
+const list_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/list-typeEvidence"));
+const delete_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/delete-typeEvidence"));
+const getbyid_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/getbyid-typeEvidence"));
 const routerv1 = (0, express_1.Router)();
 routerv1.route("/me").get(controller_2.default);
 routerv1.route("/login").post(controller_4.default);
@@ -65,4 +70,7 @@ routerv1.route("/directorById/:memId").get(auth_1.default, getbyid_director_1.de
 routerv1.route("/sceneInvestigatorById/:memId").get(auth_1.default, getbyid_scene_investigators_1.default);
 routerv1.route("/expertById/:memId").get(auth_1.default, getbyid_expert_1.default);
 routerv1.route("/memberById/:memId").delete(auth_1.default, delete_member_1.default);
+//scene Investigator
+routerv1.route("/typeEvidence").post(auth_1.default, create_typeEvidence_1.default).get(auth_1.default, list_typeEvidence_1.default).put(auth_1.default, update_typeEvidence_1.default);
+routerv1.route("/typeEvidenceById/:typeEId").get(auth_1.default, getbyid_typeEvidence_1.default).delete(auth_1.default, delete_typeEvidence_1.default);
 exports.default = routerv1;

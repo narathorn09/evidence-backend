@@ -15,6 +15,7 @@ const { server: { port }, } = require("config");
 const app = (0, express_1.default)();
 app.use(credentials_1.credentials);
 app.use(cors(corsOptions_1.corsOptions));
+// app.use(express.urlencoded({extended: true }));
 app.use(express_1.default.json());
 app.use(cookieParser());
 app.get("/", (req, res, next) => {
