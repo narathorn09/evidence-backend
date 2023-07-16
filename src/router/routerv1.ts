@@ -36,7 +36,14 @@ import GetExpertById from "../controller/admin/getbyid-expert";
 import UpdateExpert from "../controller/admin/update-expert";
 import GetGroupById from "../controller/admin/getbyid-group";
 import UpdateGroup from "../controller/admin/update-group";
-
+import UpdateProfile from "../controller/me/update-profile";
+import UpdatePassword from "../controller/me/update-password";
+import CreateTypeEvidence from "../controller/sceneInvestigator/create-typeEvidence";
+import UpdateTypeEvidence from "../controller/sceneInvestigator/update-typeEvidence";
+import ListTypeEvidence from "../controller/sceneInvestigator/list-typeEvidence";
+import DeleteTypeEvidence from "../controller/sceneInvestigator/delete-typeEvidence";
+import GetTypeEvidenceById from "../controller/sceneInvestigator/getbyid-typeEvidence";
+import GetIdByRoleAndMemId from "../controller/me/getId";
 
 const routerv1 = Router();
 
@@ -44,7 +51,9 @@ routerv1.route("/me").get(GetMe);
 routerv1.route("/login").post(Login);
 routerv1.route("/logout").get(Logout);
 routerv1.route("/accesstoken").get(HandleAccessToken);
-
+routerv1.route("/profile").put(Auth, UpdateProfile);
+routerv1.route("/password").put(Auth, UpdatePassword);
+routerv1.route("/id").post(Auth, GetIdByRoleAndMemId);
 // admin
 routerv1.route("/checkUsername").post(CheckUsername);
 routerv1.route("/countMember").get(CountMember);
@@ -62,5 +71,9 @@ routerv1.route("/directorById/:memId").get(Auth,GetDirectorById);
 routerv1.route("/sceneInvestigatorById/:memId").get(Auth,GetSceneInvestigatorById);
 routerv1.route("/expertById/:memId").get(Auth,GetExpertById);
 routerv1.route("/memberById/:memId").delete(Auth, DeleteMember);
+
+//scene Investigator
+routerv1.route("/typeEvidence").post(Auth, CreateTypeEvidence).get(Auth, ListTypeEvidence).put(Auth, UpdateTypeEvidence)
+routerv1.route("/typeEvidenceById/:typeEId").get(Auth, GetTypeEvidenceById).delete(Auth, DeleteTypeEvidence)
 
 export default routerv1;

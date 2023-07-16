@@ -16,6 +16,7 @@ interface Me {
   lname: string;
   nametitle: string;
   rank: string;
+  groupid: number;
 }
 
 const userModel: any = {};
@@ -27,6 +28,13 @@ userModel.getUserByUsername = async (
     "SELECT * FROM Member WHERE mem_username = ?",
     [username]
   );
+  return rows.length > 0 ? rows[0] : null;
+};
+
+userModel.getUserById = async (id: number): Promise<User | null> => {
+  const [rows] = await mysqlDB.query("SELECT * FROM Member WHERE mem_id = ?", [
+    id,
+  ]);
   return rows.length > 0 ? rows[0] : null;
 };
 
@@ -65,8 +73,8 @@ userModel.getMe = async (decode: any): Promise<Me | null> => {
       return null;
   }
   const [rows] = await mysqlDB.query(query);
-  if(!rows) return null;
-  
+  if (!rows) return null;
+
   const member = rows[0];
   return {
     id: member.mem_id,
@@ -94,7 +102,133 @@ userModel.getMe = async (decode: any): Promise<Me | null> => {
       member.director_rank ||
       member.inves_rank ||
       member.expert_rank,
+    groupid: member.group_id,
   };
+};
+
+userModel.updateProfile = async (data: any): Promise<boolean> => {
+  const { id, role, fname, lname, username, nametitle, rank } = data;
+  let query = "";
+  let queryData: any = [];
+  switch (role) {
+    case "0": //admin
+      query = `UPDATE Admin SET admin_fname = ?, admin_lname = ? WHERE mem_id = ? `;
+      queryData = [fname, lname, id];
+      break;
+    case "1": //commander
+      query =
+        "UPDATE Commander SET com_fname = ?, com_lname = ?, com_nametitle = ?, com_rank = ? WHERE mem_id = ? ";
+      queryData = [fname, lname, nametitle, rank, id];
+      break;
+    case "2": //Scene Investigator
+      query =
+        "UPDATE Scene_investigators SET inves_fname = ?, inves_lname = ?, inves_nametitle = ?, inves_rank = ? WHERE mem_id = ?";
+      queryData = [fname, lname, nametitle, rank, id];
+      break;
+    case "3": //Director
+      query =
+        "UPDATE Director SET director_fname = ?, director_lname = ?, director_nametitle = ?, director_rank = ? WHERE mem_id = ? ";
+      queryData = [fname, lname, nametitle, rank, id];
+      break;
+    case "4": //Expert
+      query =
+        "UPDATE Expert SET expert_fname = ?, expert_lname = ?, expert_nametitle = ?, expert_rank = ? WHERE mem_id = ?";
+      queryData = [fname, lname, nametitle, rank, id];
+      break;
+    default:
+      return false;
+  }
+
+  try {
+    const connection = await mysqlDB.getConnection();
+    try {
+      await connection.beginTransaction();
+      const memQuery = "UPDATE Member SET mem_username = ? WHERE mem_id = ?";
+      const memData = [username, id];
+      const [resultMem] = await connection.query(memQuery, memData);
+      if (!resultMem) {
+        await connection.rollback();
+        connection.release();
+        return false;
+      }
+
+      const [rows] = await mysqlDB.query(query, queryData);
+      if (!rows) {
+        await connection.rollback();
+        connection.release();
+        return false;
+      }
+      await connection.commit();
+      await connection.release();
+      return true;
+    } catch (err) {
+      await connection.rollback();
+      await connection.release();
+      throw err;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
+userModel.getIdByRoleAndMemId = async (data: any): Promise<number | null> => {
+  const { id, role } = data;
+  let query = "";
+  let queryData: [number] = [id];
+  switch (role) {
+    case "0": //admin
+      query = `SELECT admin_id FROM Admin WHERE mem_id = ? `;
+      break;
+    case "1": //commander
+      query = "SELECT com_id FROM Commander WHERE mem_id = ? ";
+      break;
+    case "2": //Scene Investigator
+      query = "SELECT inves_id FROM Scene_investigators WHERE mem_id = ?";
+      break;
+    case "3": //Director
+      query = "SELECT director_id FROM Director WHERE mem_id = ? ";
+      break;
+    case "4": //Expert
+      query = "SELECT expert_id FROM Expert WHERE mem_id = ?";
+      break;
+    default:
+      return null;
+  }
+
+  try {
+    const connection = await mysqlDB.getConnection();
+
+    const [rows] = await mysqlDB.query(query, queryData);
+    if (!rows) {
+      await connection.release();
+      return null;
+    }
+    await connection.release();
+    return rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
+userModel.updatePassword = async (data: any): Promise<boolean> => {
+  try {
+    const { id, new_password } = data;
+    const SALT_ROUNDS = 10;
+    const hash = await bcrypt.hash(new_password, SALT_ROUNDS);
+    const connection = await mysqlDB.getConnection();
+
+    const memQuery = "UPDATE Member SET mem_password = ? WHERE mem_id = ?";
+    const memData = [hash, id];
+    const [result] = await connection.query(memQuery, memData);
+    if (!result) {
+      connection.release();
+      return false;
+    }
+    await connection.release();
+    return true;
+  } catch (err) {
+    throw err;
+  }
 };
 
 userModel.logout = async (refreshToken: string): Promise<any> => {
