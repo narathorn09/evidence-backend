@@ -43,6 +43,7 @@ import UpdateTypeEvidence from "../controller/sceneInvestigator/update-typeEvide
 import ListTypeEvidence from "../controller/sceneInvestigator/list-typeEvidence";
 import DeleteTypeEvidence from "../controller/sceneInvestigator/delete-typeEvidence";
 import GetTypeEvidenceById from "../controller/sceneInvestigator/getbyid-typeEvidence";
+import GetIdByRoleAndMemId from "../controller/me/getId";
 
 const routerv1 = Router();
 
@@ -52,6 +53,7 @@ routerv1.route("/logout").get(Logout);
 routerv1.route("/accesstoken").get(HandleAccessToken);
 routerv1.route("/profile").put(Auth, UpdateProfile);
 routerv1.route("/password").put(Auth, UpdatePassword);
+routerv1.route("/id").post(Auth, GetIdByRoleAndMemId);
 // admin
 routerv1.route("/checkUsername").post(CheckUsername);
 routerv1.route("/countMember").get(CountMember);

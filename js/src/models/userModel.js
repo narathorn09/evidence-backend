@@ -17,7 +17,9 @@ userModel.getUserByUsername = (username) => __awaiter(void 0, void 0, void 0, fu
     return rows.length > 0 ? rows[0] : null;
 });
 userModel.getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const [rows] = yield mysql_1.mysqlDB.query("SELECT * FROM Member WHERE mem_id = ?", [id]);
+    const [rows] = yield mysql_1.mysqlDB.query("SELECT * FROM Member WHERE mem_id = ?", [
+        id,
+    ]);
     return rows.length > 0 ? rows[0] : null;
 });
 userModel.deleteUserById = (memId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -137,6 +139,43 @@ userModel.updateProfile = (data) => __awaiter(void 0, void 0, void 0, function* 
             yield connection.release();
             throw err;
         }
+    }
+    catch (err) {
+        throw err;
+    }
+});
+userModel.getIdByRoleAndMemId = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, role } = data;
+    let query = "";
+    let queryData = [id];
+    switch (role) {
+        case "0": //admin
+            query = `SELECT admin_id FROM Admin WHERE mem_id = ? `;
+            break;
+        case "1": //commander
+            query = "SELECT com_id FROM Commander WHERE mem_id = ? ";
+            break;
+        case "2": //Scene Investigator
+            query = "SELECT inves_id FROM Scene_investigators WHERE mem_id = ?";
+            break;
+        case "3": //Director
+            query = "SELECT director_id FROM Director WHERE mem_id = ? ";
+            break;
+        case "4": //Expert
+            query = "SELECT expert_id FROM Expert WHERE mem_id = ?";
+            break;
+        default:
+            return null;
+    }
+    try {
+        const connection = yield mysql_1.mysqlDB.getConnection();
+        const [rows] = yield mysql_1.mysqlDB.query(query, queryData);
+        if (!rows) {
+            yield connection.release();
+            return null;
+        }
+        yield connection.release();
+        return rows;
     }
     catch (err) {
         throw err;

@@ -31,13 +31,10 @@ userModel.getUserByUsername = async (
   return rows.length > 0 ? rows[0] : null;
 };
 
-userModel.getUserById = async (
-  id: number
-): Promise<User | null> => {
-  const [rows] = await mysqlDB.query(
-    "SELECT * FROM Member WHERE mem_id = ?",
-    [id]
-  );
+userModel.getUserById = async (id: number): Promise<User | null> => {
+  const [rows] = await mysqlDB.query("SELECT * FROM Member WHERE mem_id = ?", [
+    id,
+  ]);
   return rows.length > 0 ? rows[0] : null;
 };
 
@@ -169,6 +166,45 @@ userModel.updateProfile = async (data: any): Promise<boolean> => {
       await connection.release();
       throw err;
     }
+  } catch (err) {
+    throw err;
+  }
+};
+
+userModel.getIdByRoleAndMemId = async (data: any): Promise<number | null> => {
+  const { id, role } = data;
+  let query = "";
+  let queryData: [number] = [id];
+  switch (role) {
+    case "0": //admin
+      query = `SELECT admin_id FROM Admin WHERE mem_id = ? `;
+      break;
+    case "1": //commander
+      query = "SELECT com_id FROM Commander WHERE mem_id = ? ";
+      break;
+    case "2": //Scene Investigator
+      query = "SELECT inves_id FROM Scene_investigators WHERE mem_id = ?";
+      break;
+    case "3": //Director
+      query = "SELECT director_id FROM Director WHERE mem_id = ? ";
+      break;
+    case "4": //Expert
+      query = "SELECT expert_id FROM Expert WHERE mem_id = ?";
+      break;
+    default:
+      return null;
+  }
+
+  try {
+    const connection = await mysqlDB.getConnection();
+
+    const [rows] = await mysqlDB.query(query, queryData);
+    if (!rows) {
+      await connection.release();
+      return null;
+    }
+    await connection.release();
+    return rows;
   } catch (err) {
     throw err;
   }

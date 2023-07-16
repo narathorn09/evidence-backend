@@ -46,6 +46,7 @@ const update_typeEvidence_1 = __importDefault(require("../controller/sceneInvest
 const list_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/list-typeEvidence"));
 const delete_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/delete-typeEvidence"));
 const getbyid_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/getbyid-typeEvidence"));
+const getId_1 = __importDefault(require("../controller/me/getId"));
 const routerv1 = (0, express_1.Router)();
 routerv1.route("/me").get(controller_2.default);
 routerv1.route("/login").post(controller_4.default);
@@ -53,6 +54,7 @@ routerv1.route("/logout").get(controller_3.default);
 routerv1.route("/accesstoken").get(controller_1.default);
 routerv1.route("/profile").put(auth_1.default, update_profile_1.default);
 routerv1.route("/password").put(auth_1.default, update_password_1.default);
+routerv1.route("/id").post(auth_1.default, getId_1.default);
 // admin
 routerv1.route("/checkUsername").post(check_username_1.default);
 routerv1.route("/countMember").get(count_member_1.default);
