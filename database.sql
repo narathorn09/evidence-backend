@@ -118,7 +118,7 @@ CREATE TABLE Evidence (
 
 CREATE TABLE Evidence_Factor (
     ef_id INT AUTO_INCREMENT,
-    ef_photo VARCHAR(20) NOT NULL,
+    ef_photo VARCHAR(50) NULL,
     ef_detail VARCHAR(150) NULL,
     ef_status CHAR(1) NOT NULL,
     evidence_id INT NULL,
@@ -140,6 +140,21 @@ CREATE TABLE Assign (
     FOREIGN KEY (expert_id) REFERENCES Expert(expert_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+-- Adding a Type Evidence
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('ขวดน้ำ');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('แก้วน้ำ');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('เสื้อ');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('กางเกง');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('กระเป๋า');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('มีด');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('ปากกา');
 
 -- Adding a Director
 INSERT INTO Member (mem_type, mem_username, mem_password)
