@@ -1,6 +1,7 @@
 {
   "server": {
-    "port": "PORT"
+    "port": "PORT",
+    "host": "HOST"
   },
   "db": {
     "db_host": "DB_HOST",
