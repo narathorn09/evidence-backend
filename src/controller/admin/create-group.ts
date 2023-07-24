@@ -4,8 +4,8 @@ import groupModel from "../../models/groupModel";
 
 const CreateGroup = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { group_name, director_id } = req.body;
-    const data = { group_name, director_id };
+    const { group_name, group_status, director_id } = req.body;
+    const data = { group_name, group_status, director_id };
     const response = await groupModel.create(data);
     if (!response) {
       return res.status(500).json({

@@ -13,10 +13,10 @@ const mysql_1 = require("../db/mysql");
 const groupModel = {};
 groupModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { group_name, director_id } = data;
+        const { group_name, group_status, director_id } = data;
         const connection = yield mysql_1.mysqlDB.getConnection();
-        const query = `INSERT INTO GroupTable (group_name, director_id) VALUES (?, ?)`;
-        const groupData = [group_name, director_id];
+        const query = `INSERT INTO GroupTable (group_name, group_status,director_id) VALUES (?, ?, ?)`;
+        const groupData = [group_name, group_status, director_id];
         const [result] = yield connection.query(query, groupData);
         if (!result) {
             connection.release();
@@ -31,10 +31,10 @@ groupModel.create = (data) => __awaiter(void 0, void 0, void 0, function* () {
 });
 groupModel.update = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { group_id, group_name, director_id } = data;
+        const { group_id, group_name, group_status, director_id } = data;
         const connection = yield mysql_1.mysqlDB.getConnection();
-        const query = `UPDATE GroupTable SET group_name = ?, director_id = ? WHERE group_id = ?`;
-        const groupData = [group_name, director_id, group_id];
+        const query = `UPDATE GroupTable SET group_name = ?, director_id = ? , group_status = ? WHERE group_id = ?`;
+        const groupData = [group_name, director_id, group_status, group_id];
         const [result] = yield connection.query(query, groupData);
         if (!result) {
             connection.release();
@@ -50,7 +50,7 @@ groupModel.update = (data) => __awaiter(void 0, void 0, void 0, function* () {
 groupModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
     const query = ` 
     SELECT
-        g.group_id, g.group_name,
+        g.group_id, g.group_name, g.group_status,
         d.director_rank, d.director_fname, d.director_lname
     FROM
         GroupTable g
@@ -65,7 +65,7 @@ groupModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () {
 groupModel.getById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const query = ` 
   SELECT
-    g.group_name, g.director_id,
+    g.group_name, g.director_id,  g.group_status,
     d.director_rank, d.director_fname, d.director_lname
   FROM
     GroupTable g

@@ -16,8 +16,8 @@ const responseError_1 = __importDefault(require("../../components/responseError"
 const groupModel_1 = __importDefault(require("../../models/groupModel"));
 const CreateGroup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { group_name, director_id } = req.body;
-        const data = { group_name, director_id };
+        const { group_name, group_status, director_id } = req.body;
+        const data = { group_name, group_status, director_id };
         const response = yield groupModel_1.default.create(data);
         if (!response) {
             return res.status(500).json({
