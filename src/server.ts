@@ -24,10 +24,11 @@ app.use("/asset", express.static(path.join(__dirname, "../uploads")));
 interface Evidence {
   ef_photo: string | null;
   ef_detail: string;
+  assignGroupId: number
 }
 
 interface UploadedEvidence {
-  evidence_factor: { ef_photo: string | null; ef_detail: string }[];
+  evidence_factor: { ef_photo: string | null; ef_detail: string; assignGroupId: number | null}[];
   evidence_amount: number; // Assuming evidence_amount is a number, change the type accordingly if needed
   type_e_id: string; // Assuming type_e_id is a string, change the type accordingly if needed
   type_e_name: string; // Assuming type_e_name is a string, change the type accordingly if needed
@@ -45,7 +46,6 @@ app.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { evidence_list } = req.body;
-      console.log("evidence_list", evidence_list);
       const uploadedImages: {}[] = [];
 
       evidence_list.forEach((evidence: EvidenceList, index: number) => {
@@ -71,11 +71,13 @@ app.post(
               // url: `${host}/asset/${filename}`,
               ef_photo: `${filename}`,
               ef_detail: ef.ef_detail,
+              assignGroupId: ef.assignGroupId || null
             });
           } else if (ef.ef_photo === null) {
             uploadedEvidence.evidence_factor.push({
               ef_photo: null,
               ef_detail: ef.ef_detail,
+              assignGroupId: ef.assignGroupId || null
             });
           }
         });

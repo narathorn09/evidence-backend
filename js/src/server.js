@@ -34,7 +34,6 @@ app.use("/asset", express_1.default.static(path_1.default.join(__dirname, "../up
 app.post("/api/v1/uploads", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { evidence_list } = req.body;
-        console.log("evidence_list", evidence_list);
         const uploadedImages = [];
         evidence_list.forEach((evidence, index) => {
             const uploadedEvidence = {
@@ -53,12 +52,14 @@ app.post("/api/v1/uploads", (req, res, next) => __awaiter(void 0, void 0, void 0
                         // url: `${host}/asset/${filename}`,
                         ef_photo: `${filename}`,
                         ef_detail: ef.ef_detail,
+                        assignGroupId: ef.assignGroupId || null
                     });
                 }
                 else if (ef.ef_photo === null) {
                     uploadedEvidence.evidence_factor.push({
                         ef_photo: null,
                         ef_detail: ef.ef_detail,
+                        assignGroupId: ef.assignGroupId || null
                     });
                 }
             });
