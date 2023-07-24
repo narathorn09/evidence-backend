@@ -44,6 +44,9 @@ import ListTypeEvidence from "../controller/sceneInvestigator/list-typeEvidence"
 import DeleteTypeEvidence from "../controller/sceneInvestigator/delete-typeEvidence";
 import GetTypeEvidenceById from "../controller/sceneInvestigator/getbyid-typeEvidence";
 import GetIdByRoleAndMemId from "../controller/me/getId";
+import CreateCase from "../controller/sceneInvestigator/create-case";
+import ListCaseById from "../controller/sceneInvestigator/listCaseById-case";
+import GetCaseById from "../controller/sceneInvestigator/getbyid-case";
 
 const routerv1 = Router();
 
@@ -60,7 +63,7 @@ routerv1.route("/countMember").get(CountMember);
 routerv1.route("/countGroup").get(CountGroup);
 routerv1.route("/group").post(Auth,CreateGroup).get(Auth,ListGroup).put(Auth,UpdateGroup)
 routerv1.route("/groupById/:groupId").get(Auth, GetGroupById).delete(Auth, DeleteGroup)
-routerv1.route("/admin").post(CreateAdmin).get(Auth,ListAdmin).put(Auth,UpdateAdmin)
+routerv1.route("/admin").post(Auth, CreateAdmin).get(Auth, ListAdmin).put(Auth,UpdateAdmin)
 routerv1.route("/commander").post(Auth,CreateCommander).get(Auth,ListCommander).put(Auth,UpdateCommander)
 routerv1.route("/director").post(Auth,CreateDirector).get(Auth,ListDirector).put(Auth,UpdateDirector)
 routerv1.route("/sceneInvestigator").post(Auth,CreateSceneInvestigator).get(Auth,ListSceneInvestigator).put(Auth,UpdateSceneInvestigator)
@@ -75,5 +78,8 @@ routerv1.route("/memberById/:memId").delete(Auth, DeleteMember);
 //scene Investigator
 routerv1.route("/typeEvidence").post(Auth, CreateTypeEvidence).get(Auth, ListTypeEvidence).put(Auth, UpdateTypeEvidence)
 routerv1.route("/typeEvidenceById/:typeEId").get(Auth, GetTypeEvidenceById).delete(Auth, DeleteTypeEvidence)
+routerv1.route("/case").post(Auth, CreateCase)
+routerv1.route("/caseByInvesId/:invesId").get(Auth, ListCaseById)
+routerv1.route("/caseByCaseId/:caseId").get(GetCaseById)
 
 export default routerv1;
