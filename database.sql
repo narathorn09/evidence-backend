@@ -130,13 +130,13 @@ CREATE TABLE Evidence_Factor (
 CREATE TABLE Assign (
     assign_id INT AUTO_INCREMENT,
     assign_direc_status CHAR(1) NOT NULL,
-    assign_evi_result VARCHAR(10) NOT NULL,
+    assign_evi_result VARCHAR(10) NULL,
     assign_exp_status CHAR(1) NOT NULL,
-    evidence_id INT NOT NULL,
+    ef_id INT NOT NULL,
     group_id INT NOT NULL,
     expert_id INT NULL,
     PRIMARY KEY (assign_id),
-    FOREIGN KEY (evidence_id) REFERENCES Evidence(evidence_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (ef_id) REFERENCES Evidence_Factor(ef_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES GroupTable(group_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (expert_id) REFERENCES Expert(expert_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
