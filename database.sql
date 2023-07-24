@@ -54,6 +54,7 @@ CREATE TABLE Director (
 CREATE TABLE GroupTable (
     group_id INT AUTO_INCREMENT,
     group_name VARCHAR(50) NOT NULL,
+    group_status CHAR(1) NOT NULL,
     director_id INT NULL,
     PRIMARY KEY (group_id),
     FOREIGN KEY (director_id) REFERENCES Director(director_id) ON UPDATE CASCADE ON DELETE SET NULL
@@ -218,14 +219,15 @@ INSERT INTO Director (director_nametitle, director_rank, director_fname, directo
 VALUES ('นาย', 'พ.ต.อ', 'วีรชัย', 'วงศ์ทิพย์', @last_member_id);
 
 -- Adding a Group
-INSERT INTO GroupTable (group_name, director_id)
-VALUES ('กลุ่มงานตรวจสถานที่เกิดเหตุ', 1),
-       ('กลุ่มงานตรวจอาวุธปืนและเครื่องกระสุน', NULL),
-       ('กลุ่มงานตรวจยาเสพติด', NULL),
-       ('กลุ่มงานตรวจลายนิ้วมือแฝง', NULL),
-       ('กลุ่มงานตรวจพิสูจน์ทางเคมีฟิสิกส์', NULL),
-       ('กลุ่มงานตรวจชีววิทยาและดีเอ็นเอ', 2),
-       ('กลุ่มงานผู้เชี่ยวชาญ', NULL);
+-- 0 เปิดกลุ่มงาน, 1 ปิดกลุ่มงาน
+INSERT INTO GroupTable (group_name, director_id, group_status)
+VALUES ('กลุ่มงานตรวจสถานที่เกิดเหตุ', 1, '0'),
+       ('กลุ่มงานตรวจอาวุธปืนและเครื่องกระสุน', NULL, '1'),
+       ('กลุ่มงานตรวจยาเสพติด', NULL, '1'),
+       ('กลุ่มงานตรวจลายนิ้วมือแฝง', NULL, '1'),
+       ('กลุ่มงานตรวจพิสูจน์ทางเคมีฟิสิกส์', NULL, '1'),
+       ('กลุ่มงานตรวจชีววิทยาและดีเอ็นเอ', 2, '0'),
+       ('กลุ่มงานผู้เชี่ยวชาญ', NULL, '1');
 
 -- Adding a Admin
 INSERT INTO Member (mem_type, mem_username, mem_password)
