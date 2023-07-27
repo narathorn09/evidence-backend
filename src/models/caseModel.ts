@@ -78,9 +78,10 @@ caseModel.create = async (data: CaseData): Promise<any | null> => {
         result.push(resultEvidence);
 
         evidence.evidence_factor.forEach(async (ef: any, i: number) => {
+          
           const queryEvidenceFactor = `INSERT INTO Evidence_Factor (ef_status, evidence_id, ef_photo, ef_detail) VALUES (?, ?, ?, ?)`;
           const evidenceFactorData = [
-            "0",
+            ef.assignGroupId ? "1" : "0",
             resultEvidence.insertId,
             ef.ef_photo,
             ef.ef_detail,
@@ -158,8 +159,26 @@ caseModel.getCaseById = async (caseId: number): Promise<any | null> => {
       const [resultEvidence] = await connection.query(queryEvidence, caseId);
 
       for (const evidence of resultEvidence) {
-        const queryEvidenceFactor =
-          "SELECT * FROM Evidence_Factor WHERE evidence_id = ?";
+        const queryEvidenceFactor = `SELECT 
+            ef.ef_id,
+            ef.ef_photo,
+            ef.ef_detail,
+            ef.ef_status,
+            ef.evidence_id,
+            a.assign_id,
+            a.assign_direc_status,
+            a.assign_evi_result,
+            a.assign_exp_status,
+            a.case_id,
+            a.group_id,
+            a.expert_id
+        FROM 
+            Evidence_Factor ef
+        JOIN 
+            Assign a ON ef.ef_id = a.ef_id
+        WHERE
+            evidence_id = ?;
+        `;
         const [resultEvidenceFactor] = await connection.query(
           queryEvidenceFactor,
           evidence.evidence_id
@@ -180,6 +199,5 @@ caseModel.getCaseById = async (caseId: number): Promise<any | null> => {
     throw err;
   }
 };
-
 
 export default caseModel;
