@@ -120,7 +120,7 @@ CREATE TABLE Evidence (
 CREATE TABLE Evidence_Factor (
     ef_id INT AUTO_INCREMENT,
     ef_photo VARCHAR(50) NULL,
-    ef_detail VARCHAR(150) NULL,
+    ef_detail VARCHAR(255) NULL,
     ef_status CHAR(1) NOT NULL,
     evidence_id INT NULL,
     PRIMARY KEY (ef_id),
