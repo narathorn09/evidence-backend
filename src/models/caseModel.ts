@@ -1,6 +1,7 @@
 import { mysqlDB } from "../db/mysql";
 
 interface CaseData {
+  case_id: Number;
   case_numboko: String;
   case_save_date: String;
   case_save_time: String;
@@ -78,7 +79,6 @@ caseModel.create = async (data: CaseData): Promise<any | null> => {
         result.push(resultEvidence);
 
         evidence.evidence_factor.forEach(async (ef: any, i: number) => {
-          
           const queryEvidenceFactor = `INSERT INTO Evidence_Factor (ef_status, evidence_id, ef_photo, ef_detail) VALUES (?, ?, ?, ?)`;
           const evidenceFactorData = [
             ef.assignGroupId ? "1" : "0",
@@ -115,6 +115,231 @@ caseModel.create = async (data: CaseData): Promise<any | null> => {
       });
 
       console.log("result", result);
+      await connection.commit();
+      connection.release();
+      return result || null;
+    } catch (err) {
+      await connection.rollback();
+      connection.release();
+      throw err;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
+caseModel.update = async (data: any): Promise<any | null> => {
+  try {
+    const connection = await mysqlDB.getConnection();
+    try {
+      await connection.beginTransaction();
+      const {
+        case_id,
+        case_numboko,
+        case_save_date,
+        case_save_time,
+        case_accident_date,
+        case_accident_time,
+        case_location,
+        case_type,
+        inves_id,
+        defEvidence,
+        removeEvidenceFactorInDef,
+        newEvidence,
+        removeEvidence,
+      } = data;
+
+      const queryCase = `UPDATE CaseTable 
+      SET 
+        case_numboko = ?,
+        case_save_date = ?,
+        case_save_time = ?,
+        case_accident_date = ?,
+        case_accident_time = ?,
+        case_location = ?,
+        case_type = ?
+      WHERE
+        case_id = ?`;
+
+      const caseData = [
+        case_numboko,
+        case_save_date,
+        case_save_time,
+        case_accident_date,
+        case_accident_time,
+        case_location,
+        case_type,
+        case_id,
+      ];
+
+      let result: any[] = [];
+
+      const [resultCase] = await connection.query(queryCase, caseData);
+      if (!resultCase) return null;
+
+      result.push(resultCase);
+
+      if (removeEvidenceFactorInDef.length > 0) {
+        const queryRemoveEf = `DELETE FROM Evidence_Factor WHERE ef_id IN (?);`;
+        const dataRemoveEf = [removeEvidenceFactorInDef];
+        const [resultRemoveEf] = await connection.query(
+          queryRemoveEf,
+          dataRemoveEf
+        );
+        if (!resultRemoveEf) return null;
+      }
+
+      if (removeEvidence.length > 0) {
+        const queryRemoveE = `DELETE FROM Evidence WHERE evidence_id IN (?);`;
+        const dataRemoveE = [removeEvidence];
+        const [resultRemoveE] = await connection.query(
+          queryRemoveE,
+          dataRemoveE
+        );
+        if (!resultRemoveE) return null;
+      }
+
+      if (newEvidence.length > 0) {
+        newEvidence.forEach(async (evidence: any) => {
+          const queryEvidence = `INSERT INTO Evidence (evidence_amount, type_e_id, case_id) VALUES (?, ?, ?)`;
+          const evidenceData = [
+            evidence.evidence_amount,
+            evidence.type_e_id,
+            case_id,
+          ];
+          const [resultEvidence] = await connection.query(
+            queryEvidence,
+            evidenceData
+          );
+          if (!resultEvidence) return null;
+
+          evidence.evidence_factor.forEach(async (ef: any, i: number) => {
+            const queryEvidenceFactor = `INSERT INTO Evidence_Factor (ef_status, evidence_id, ef_photo, ef_detail) VALUES (?, ?, ?, ?)`;
+            const evidenceFactorData = [
+              ef.assignGroupId ? "1" : "0",
+              resultEvidence.insertId,
+              ef.ef_photo,
+              ef.ef_detail,
+            ];
+            const [resultEvidenceFactor] = await connection.query(
+              queryEvidenceFactor,
+              evidenceFactorData
+            );
+            if (!resultEvidenceFactor) return null;
+
+            result.push(resultEvidenceFactor);
+
+            const queryAssign = `INSERT INTO Assign (assign_direc_status, assign_evi_result, assign_exp_status, case_id, ef_id, group_id, expert_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            const assignData = [
+              "0",
+              null,
+              "0",
+              case_id,
+              resultEvidenceFactor.insertId,
+              ef.assignGroupId,
+              null,
+            ];
+            const [resultAssign] = await connection.query(
+              queryAssign,
+              assignData
+            );
+            if (!resultAssign) return null;
+
+            result.push(resultAssign);
+          });
+        });
+      }
+
+      if (defEvidence.length > 0) {
+        defEvidence.forEach(async (evidence: any) => {
+          const queryEvidence = `
+          UPDATE Evidence 
+          SET 
+            evidence_amount = ?,
+            type_e_id = ?
+          WHERE
+            evidence_id = ?`;
+          const dataEvidence = [
+            evidence.evidence_amount,
+            evidence.type_e_id,
+            evidence.evidence_id,
+          ];
+          const [resultEvidence] = await connection.query(
+            queryEvidence,
+            dataEvidence
+          );
+          if (!resultEvidence) return null;
+
+          evidence.evidence_factor.forEach(async (ef: any) => {
+            if (!(typeof ef.ef_id === "number")) {
+              const queryEvidenceFactor = `INSERT INTO Evidence_Factor (ef_status, evidence_id, ef_photo, ef_detail) VALUES (?, ?, ?, ?)`;
+              const evidenceFactorData = [
+                ef.assignGroupId ? "1" : "0",
+                evidence.evidence_id,
+                ef.ef_photo,
+                ef.ef_detail,
+              ];
+              const [resultEvidenceFactor] = await connection.query(
+                queryEvidenceFactor,
+                evidenceFactorData
+              );
+              if (!resultEvidenceFactor) return null;
+
+              result.push(resultEvidenceFactor);
+
+              const queryAssign = `INSERT INTO Assign (assign_direc_status, assign_evi_result, assign_exp_status, case_id, ef_id, group_id, expert_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+              const assignData = [
+                "0",
+                null,
+                "0",
+                case_id,
+                resultEvidenceFactor.insertId,
+                ef.assignGroupId,
+                null,
+              ];
+              const [resultAssign] = await connection.query(
+                queryAssign,
+                assignData
+              );
+              if (!resultAssign) return null;
+
+              result.push(resultAssign);
+            } else {
+              const queryEvidenceFactor = `UPDATE Evidence_Factor SET ef_status = ?, ef_photo = ?, ef_detail = ? WHERE ef_id = ?`;
+              const evidenceFactorData = [
+                ef.assignGroupId_remove ? "0" : ef.assignGroupId ? "1" : ef.ef_status,
+                ef.ef_photo,
+                ef.ef_detail,
+                ef.ef_id,
+              ];
+              const [resultEvidenceFactor] = await connection.query(
+                queryEvidenceFactor,
+                evidenceFactorData
+              );
+              if (!resultEvidenceFactor) return null;
+
+              result.push(resultEvidenceFactor);
+
+              const queryAssign = `UPDATE Assign SET assign_direc_status = ?, assign_evi_result = ?, assign_exp_status = ?, group_id = ?, expert_id = ? WHERE case_id = ? AND ef_id = ?`;
+              const assignData = [
+                "0",
+                null,
+                "0",
+                ef.assignGroupId_remove ? null : ef.assignGroupId || ef.group_id,
+                ef.expert_id,
+                case_id,
+                ef.ef_id,
+              ];
+              const [resultAssign] = await connection.query(
+                queryAssign,
+                assignData
+              );
+              if (!resultAssign) return null;
+            }
+          });
+        });
+      }
+
       await connection.commit();
       connection.release();
       return result || null;

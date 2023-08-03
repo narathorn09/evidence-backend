@@ -47,6 +47,7 @@ import GetIdByRoleAndMemId from "../controller/me/getId";
 import CreateCase from "../controller/sceneInvestigator/create-case";
 import ListCaseById from "../controller/sceneInvestigator/listCaseById-case";
 import GetCaseById from "../controller/sceneInvestigator/getbyid-case";
+import UpdateCase from "../controller/sceneInvestigator/update-case";
 
 const routerv1 = Router();
 
@@ -78,7 +79,7 @@ routerv1.route("/memberById/:memId").delete(Auth, DeleteMember);
 //scene Investigator
 routerv1.route("/typeEvidence").post(Auth, CreateTypeEvidence).get(Auth, ListTypeEvidence).put(Auth, UpdateTypeEvidence)
 routerv1.route("/typeEvidenceById/:typeEId").get(Auth, GetTypeEvidenceById).delete(Auth, DeleteTypeEvidence)
-routerv1.route("/case").post(Auth, CreateCase)
+routerv1.route("/case").post(Auth, CreateCase).put(UpdateCase)
 routerv1.route("/caseByInvesId/:invesId").get(Auth, ListCaseById)
 routerv1.route("/caseByCaseId/:caseId").get(GetCaseById)
 
