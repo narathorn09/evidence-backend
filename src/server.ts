@@ -24,14 +24,22 @@ app.use("/asset", express.static(path.join(__dirname, "../uploads")));
 interface Evidence {
   ef_photo: string | null;
   ef_detail: string;
-  assignGroupId: number
+  assignGroupId: number;
 }
 
 interface UploadedEvidence {
-  evidence_factor: { ef_photo: string | null; ef_detail: string; assignGroupId: number | null}[];
+  evidence_factor: {
+    ef_photo: string | null;
+    ef_detail: string;
+    assignGroupId: number | null;
+  }[];
   evidence_amount: number; // Assuming evidence_amount is a number, change the type accordingly if needed
   type_e_id: string; // Assuming type_e_id is a string, change the type accordingly if needed
   type_e_name: string; // Assuming type_e_name is a string, change the type accordingly if needed
+}
+
+interface DefEvidence {
+  ef_photo: string;
 }
 
 interface EvidenceList {
@@ -71,13 +79,13 @@ app.post(
               // url: `${host}/asset/${filename}`,
               ef_photo: `${filename}`,
               ef_detail: ef.ef_detail,
-              assignGroupId: ef.assignGroupId || null
+              assignGroupId: ef.assignGroupId || null,
             });
           } else if (ef.ef_photo === null) {
             uploadedEvidence.evidence_factor.push({
               ef_photo: null,
               ef_detail: ef.ef_detail,
-              assignGroupId: ef.assignGroupId || null
+              assignGroupId: ef.assignGroupId || null,
             });
           }
         });
@@ -86,6 +94,129 @@ app.post(
 
       res.status(200).json({
         result: uploadedImages || [],
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.put(
+  "/api/v1/update/uploads",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { defElements, missingElements, newElements, efDelete } = req.body;
+      const uploadedImages: {}[] = [];
+      let newEvidence: any,
+        {} = {};
+      let removeEvidence: any[] = [];
+      let removeEvidenceFactor: any[] = [];
+      const defEvidence: {}[] = [];
+
+      if (efDelete.length > 0) {
+        efDelete.forEach((ef: any) => {
+          removeEvidenceFactor.push({ ef_id: ef?.ef_id });
+          if (ef.ef_photo) {
+            const pathImg = `${__dirname}/../uploads/${ef.ef_photo}`;
+            fs.unlinkSync(pathImg);
+          }
+        });
+      }
+
+      if (missingElements.length > 0) {
+        missingElements.forEach((item: any) => {
+          removeEvidence.push({ evidence_id: item?.evidence_id });
+          item.evidence_factor.forEach((ef: any) => {
+            if (ef.ef_photo) {
+              const pathImg = `${__dirname}/../uploads/${ef.ef_photo}`;
+              fs.unlinkSync(pathImg);
+            }
+          });
+        });
+      }
+
+      if (newElements.length > 0) {
+        newElements.forEach((item: any) => {
+          newEvidence = {
+            ...item,
+            evidence_factor: [],
+          };
+          item.evidence_factor.forEach((ef: any) => {
+            const filename = `${uuid()}.png`;
+            const pathImg = `${__dirname}/../uploads/${filename}`;
+
+            if (ef.ef_photo) {
+              const base64Data = ef.ef_photo.replace(
+                /^data:([A-Za-z-+/]+);base64,/,
+                ""
+              );
+              fs.writeFileSync(pathImg, base64Data, { encoding: "base64" });
+
+              newEvidence.evidence_factor.push({
+                ...ef,
+                ef_photo: `${filename}`,
+              });
+            } else if (ef.ef_photo === null) {
+              newEvidence.evidence_factor.push({
+                ...ef,
+                ef_photo: null,
+              });
+            }
+          });
+        });
+      }
+
+      if (defElements.length > 0) {
+        defElements.forEach((defElement: any) => {
+          const defEvidenceFactor: { evidence_factor: DefEvidence[] } = {
+            evidence_factor: [],
+          };
+          defElement.evidence_factor.forEach((ef: any) => {
+            if (ef.ef_photo?.split(";")[1]?.split(",")[0] === "base64") {
+              const filename = `${uuid()}.png`;
+              const pathImg = `${__dirname}/../uploads/${filename}`;
+              const base64Data = ef.ef_photo.replace(
+                /^data:([A-Za-z-+/]+);base64,/,
+                ""
+              );
+              fs.writeFileSync(pathImg, base64Data, { encoding: "base64" });
+              if (ef.ef_photo_remove) {
+                const pathImgRemove = `${__dirname}/../uploads/${ef.ef_photo_remove}`;
+                fs.unlinkSync(pathImgRemove);
+              }
+
+              defEvidenceFactor.evidence_factor.push({
+                ...ef,
+                ef_photo: filename,
+              });
+            } else {
+              if (ef.ef_photo_remove) {
+                const pathImgRemove = `${__dirname}/../uploads/${ef.ef_photo_remove}`;
+                fs.unlinkSync(pathImgRemove);
+                defEvidenceFactor.evidence_factor.push({
+                  ...ef,
+                  ef_photo: null,
+                  ef_photo_remove: null,
+                });
+              } else {
+                defEvidenceFactor.evidence_factor.push({
+                  ...ef,
+                  ef_photo: ef.ef_photo,
+                });
+              }
+             
+            }
+          });
+
+          defEvidence.push(defEvidenceFactor);
+        });
+      }
+
+      res.status(200).json({
+        defEvidence: defEvidence || [],
+        removeEvidenceFactorInDef: removeEvidenceFactor || [],
+        newEvidence: newEvidence || [],
+        removeEvidence: removeEvidence || [],
       });
     } catch (err) {
       next(err);
