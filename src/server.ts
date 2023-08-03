@@ -107,15 +107,14 @@ app.put(
     try {
       const { defElements, missingElements, newElements, efDelete } = req.body;
       const uploadedImages: {}[] = [];
-      let newEvidence: any,
-        {} = {};
+      const newEvidence: {}[] = [];
       let removeEvidence: any[] = [];
       let removeEvidenceFactor: any[] = [];
       const defEvidence: {}[] = [];
 
       if (efDelete.length > 0) {
         efDelete.forEach((ef: any) => {
-          removeEvidenceFactor.push({ ef_id: ef?.ef_id });
+          removeEvidenceFactor.push(ef?.ef_id);
           if (ef.ef_photo) {
             const pathImg = `${__dirname}/../uploads/${ef.ef_photo}`;
             fs.unlinkSync(pathImg);
@@ -125,7 +124,7 @@ app.put(
 
       if (missingElements.length > 0) {
         missingElements.forEach((item: any) => {
-          removeEvidence.push({ evidence_id: item?.evidence_id });
+          removeEvidence.push(item?.evidence_id);
           item.evidence_factor.forEach((ef: any) => {
             if (ef.ef_photo) {
               const pathImg = `${__dirname}/../uploads/${ef.ef_photo}`;
@@ -137,7 +136,7 @@ app.put(
 
       if (newElements.length > 0) {
         newElements.forEach((item: any) => {
-          newEvidence = {
+          const newEvidenceFactor: { evidence_factor: DefEvidence[] } = {
             ...item,
             evidence_factor: [],
           };
@@ -152,23 +151,25 @@ app.put(
               );
               fs.writeFileSync(pathImg, base64Data, { encoding: "base64" });
 
-              newEvidence.evidence_factor.push({
+              newEvidenceFactor.evidence_factor.push({
                 ...ef,
                 ef_photo: `${filename}`,
               });
             } else if (ef.ef_photo === null) {
-              newEvidence.evidence_factor.push({
+              newEvidenceFactor.evidence_factor.push({
                 ...ef,
                 ef_photo: null,
               });
             }
           });
+          newEvidence.push(newEvidenceFactor);
         });
       }
 
       if (defElements.length > 0) {
         defElements.forEach((defElement: any) => {
           const defEvidenceFactor: { evidence_factor: DefEvidence[] } = {
+            ...defElement,
             evidence_factor: [],
           };
           defElement.evidence_factor.forEach((ef: any) => {
@@ -204,7 +205,6 @@ app.put(
                   ef_photo: ef.ef_photo,
                 });
               }
-             
             }
           });
 
