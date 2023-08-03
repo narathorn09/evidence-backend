@@ -425,4 +425,17 @@ caseModel.getCaseById = async (caseId: number): Promise<any | null> => {
   }
 };
 
+
+caseModel.deleteById = async (case_id: number): Promise<boolean> => {
+  try {
+    const connection = await mysqlDB.getConnection();
+    const query = `DELETE FROM CaseTable WHERE case_id=${case_id}`;
+    const [result] = await connection.query(query);
+    await connection.release();
+    return result ? true : false;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export default caseModel;
