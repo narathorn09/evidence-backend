@@ -307,7 +307,11 @@ caseModel.update = async (data: any): Promise<any | null> => {
             } else {
               const queryEvidenceFactor = `UPDATE Evidence_Factor SET ef_status = ?, ef_photo = ?, ef_detail = ? WHERE ef_id = ?`;
               const evidenceFactorData = [
-                ef.assignGroupId_remove ? "0" : ef.assignGroupId ? "1" : ef.ef_status,
+                ef.assignGroupId_remove
+                  ? "0"
+                  : ef.assignGroupId
+                  ? "1"
+                  : ef.ef_status,
                 ef.ef_photo,
                 ef.ef_detail,
                 ef.ef_id,
@@ -325,7 +329,9 @@ caseModel.update = async (data: any): Promise<any | null> => {
                 "0",
                 null,
                 "0",
-                ef.assignGroupId_remove ? null : ef.assignGroupId || ef.group_id,
+                ef.assignGroupId_remove
+                  ? null
+                  : ef.assignGroupId || ef.group_id,
                 ef.expert_id,
                 case_id,
                 ef.ef_id,
@@ -359,7 +365,53 @@ caseModel.getAllCaseByInvesId = async (
   try {
     const connection = await mysqlDB.getConnection();
     try {
-      const query = "SELECT * FROM CaseTable WHERE inves_id = ?";
+      const query = `
+      SELECT 
+      c.case_id,
+      c.case_numboko,
+      c.case_save_date,
+      c.case_save_time,
+      c.case_accident_date,
+      c.case_accident_time,
+      c.case_location,
+      c.case_type,
+      c.case_status,
+      c.inves_id,
+      JSON_ARRAYAGG(JSON_OBJECT(
+          'evidence_id', e.evidence_id,
+          'evidence_amount', e.evidence_amount,
+          'case_id', e.case_id,
+          'type_e_id', e.type_e_id,
+          'evidence_factor', (
+              SELECT JSON_ARRAYAGG(JSON_OBJECT(
+                  'ef_id', ef.ef_id,
+                  'ef_photo', ef.ef_photo,
+                  'ef_detail', ef.ef_detail,
+                  'ef_status', ef.ef_status,
+                  'evidence_id', ef.evidence_id,
+                  'assign_id', a.assign_id,
+                  'assign_direc_status', a.assign_direc_status,
+                  'assign_evi_result', a.assign_evi_result,
+                  'assign_exp_status', a.assign_exp_status,
+                  'case_id', a.case_id,
+                  'group_id', a.group_id,
+                  'expert_id', a.expert_id
+              ))
+              FROM Evidence_Factor ef
+              LEFT JOIN Assign a ON ef.ef_id = a.ef_id
+              WHERE ef.evidence_id = e.evidence_id AND a.case_id = c.case_id 
+          )
+      )) AS evidence_list
+    FROM CaseTable c
+    LEFT JOIN Evidence e ON c.case_id = e.case_id
+    WHERE EXISTS (
+        SELECT 1
+        FROM Evidence_Factor ef
+        LEFT JOIN Assign a ON ef.ef_id = a.ef_id
+        WHERE ef.evidence_id = e.evidence_id AND c.inves_id = ? 
+    ) 
+    GROUP BY c.case_id;
+      `;
       const [result] = await connection.query(query, InvesId);
 
       await connection.release();
@@ -424,7 +476,6 @@ caseModel.getCaseById = async (caseId: number): Promise<any | null> => {
     throw err;
   }
 };
-
 
 caseModel.deleteById = async (case_id: number): Promise<boolean> => {
   try {
