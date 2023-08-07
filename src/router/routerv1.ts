@@ -5,6 +5,9 @@ import HandleAccessToken from "../controller/accesstoken/controller";
 import GetMe from "../controller/me/controller";
 import Logout from "../controller/logout/controller";
 import Login from "../controller/login/controller";
+import GetIdByRoleAndMemId from "../controller/me/getId";
+import UpdateProfile from "../controller/me/update-profile";
+import UpdatePassword from "../controller/me/update-password";
 
 // admin
 import CreateAdmin from "../controller/admin/create-admin";
@@ -36,19 +39,23 @@ import GetExpertById from "../controller/admin/getbyid-expert";
 import UpdateExpert from "../controller/admin/update-expert";
 import GetGroupById from "../controller/admin/getbyid-group";
 import UpdateGroup from "../controller/admin/update-group";
-import UpdateProfile from "../controller/me/update-profile";
-import UpdatePassword from "../controller/me/update-password";
+
+//scene Investigator
 import CreateTypeEvidence from "../controller/sceneInvestigator/create-typeEvidence";
 import UpdateTypeEvidence from "../controller/sceneInvestigator/update-typeEvidence";
 import ListTypeEvidence from "../controller/sceneInvestigator/list-typeEvidence";
 import DeleteTypeEvidence from "../controller/sceneInvestigator/delete-typeEvidence";
 import GetTypeEvidenceById from "../controller/sceneInvestigator/getbyid-typeEvidence";
-import GetIdByRoleAndMemId from "../controller/me/getId";
 import CreateCase from "../controller/sceneInvestigator/create-case";
 import ListCaseById from "../controller/sceneInvestigator/listCaseById-case";
 import GetCaseById from "../controller/sceneInvestigator/getbyid-case";
 import UpdateCase from "../controller/sceneInvestigator/update-case";
 import DeleteCase from "../controller/sceneInvestigator/delete-case";
+
+//director
+import ListCaseAssign from "../controller/director/list-case-assign";
+import AcceptCase from "../controller/director/accept-case";
+import GetCaseAssignByCaseId from "../controller/director/getbyid-case-assign";
 
 const routerv1 = Router();
 
@@ -82,6 +89,12 @@ routerv1.route("/typeEvidence").post(Auth, CreateTypeEvidence).get(Auth, ListTyp
 routerv1.route("/typeEvidenceById/:typeEId").get(Auth, GetTypeEvidenceById).delete(Auth, DeleteTypeEvidence)
 routerv1.route("/case").post(Auth, CreateCase).put(Auth, UpdateCase)
 routerv1.route("/caseByInvesId/:invesId").get(Auth, ListCaseById)
-routerv1.route("/caseByCaseId/:caseId").get(Auth, GetCaseById).delete(Auth, DeleteCase)
+routerv1.route("/caseByCaseId/:caseId").get(GetCaseById).delete(DeleteCase)
+
+//director
+routerv1.route("/caseByAssign/:direcId").get(ListCaseAssign)
+routerv1.route("/acceptCase").put(AcceptCase)
+routerv1.route("/caseAssignByCaseId").post(GetCaseAssignByCaseId)
+
 
 export default routerv1;
