@@ -115,7 +115,7 @@ app.put(
       if (efDelete.length > 0) {
         efDelete.forEach((ef: any) => {
           removeEvidenceFactor.push(ef?.ef_id);
-          if (ef.ef_photo) {
+          if (ef.ef_photo?.split(";")[1]?.split(",")[0] !== "base64" && ef.ef_photo !== null) {
             const pathImg = `${__dirname}/../uploads/${ef.ef_photo}`;
             fs.unlinkSync(pathImg);
           }
@@ -126,7 +126,7 @@ app.put(
         missingElements.forEach((item: any) => {
           removeEvidence.push(item?.evidence_id);
           item.evidence_factor.forEach((ef: any) => {
-            if (ef.ef_photo) {
+            if (ef.ef_photo?.split(";")[1]?.split(",")[0] !== "base64" && ef.ef_photo !== null) {
               const pathImg = `${__dirname}/../uploads/${ef.ef_photo}`;
               fs.unlinkSync(pathImg);
             }
@@ -217,6 +217,32 @@ app.put(
         removeEvidenceFactorInDef: removeEvidenceFactor || [],
         newEvidence: newEvidence || [],
         removeEvidence: removeEvidence || [],
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.post(
+  "/api/v1/delete/uploads",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { caseData } = req.body;
+      const removeImages: {}[] = [];
+
+      caseData?.evidence_list.forEach((evidence: any, index: number) => {
+        evidence?.evidence_factor.forEach((ef: any) => {
+          if (ef.ef_photo) {
+            const pathImg = `${__dirname}/../uploads/${ef.ef_photo}`;
+            fs.unlinkSync(pathImg);
+            removeImages.push(ef.ef_photo);
+          }
+        });
+      });
+
+      res.status(200).json({
+        result: removeImages || [],
       });
     } catch (err) {
       next(err);
