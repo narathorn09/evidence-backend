@@ -56,6 +56,7 @@ import DeleteCase from "../controller/sceneInvestigator/delete-case";
 import ListCaseAssign from "../controller/director/list-case-assign";
 import AcceptCase from "../controller/director/accept-case";
 import GetCaseAssignByCaseId from "../controller/director/getbyid-case-assign";
+import CancelCase from "../controller/director/cancel-case";
 
 const routerv1 = Router();
 
@@ -94,6 +95,7 @@ routerv1.route("/caseByCaseId/:caseId").get(GetCaseById).delete(DeleteCase)
 //director
 routerv1.route("/caseByAssign/:direcId").get(ListCaseAssign)
 routerv1.route("/acceptCase").put(AcceptCase)
+routerv1.route("/cancelCase").put(CancelCase)
 routerv1.route("/caseAssignByCaseId").post(GetCaseAssignByCaseId)
 
 

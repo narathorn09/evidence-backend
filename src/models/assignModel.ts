@@ -163,4 +163,32 @@ assignModel.directorAcceptCaseAssign = async (data: any): Promise<any> => {
   }
 };
 
+assignModel.directorCancelCaseAssign = async (data: any): Promise<any> => {
+  try {
+    const { case_id, director_id } = data;
+    const connection = await mysqlDB.getConnection();
+    const queryGetGroupId = `SELECT group_id FROM GroupTable WHERE director_id=${director_id}`;
+    const [resultGroupId] = await connection.query(queryGetGroupId);
+    const groupId = resultGroupId[0]?.group_id;
+
+    const updateQuery = `
+    UPDATE Assign AS a
+    JOIN Evidence_Factor AS e ON a.ef_id = e.ef_id
+    SET a.assign_direc_status = '0',
+        e.ef_status = '0',
+        a.group_id = NULL
+    WHERE a.case_id = ? AND a.group_id = ?;
+  `;
+  
+  const [result] = await connection.query(updateQuery, [case_id, groupId]);
+  
+
+    await connection.release();
+    if(result?.affectedRows === 0)  return null;
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export default assignModel;
