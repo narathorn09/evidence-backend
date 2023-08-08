@@ -49,7 +49,7 @@ groupModel.getAll = async (): Promise<[] | null> => {
   const query = ` 
     SELECT
         g.group_id, g.group_name, g.group_status,
-        d.director_rank, d.director_fname, d.director_lname
+        d.director_id, d.director_rank, d.director_fname, d.director_lname
     FROM
         GroupTable g
     LEFT JOIN
