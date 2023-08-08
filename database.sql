@@ -385,13 +385,13 @@ INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert3', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาย', ' ร.ต.ท.', 'ธนิตย์', 'อุดมเสก', @last_member_id, 6);
+VALUES ('นาย', 'ร.ต.ท.', 'ธนิตย์', 'อุดมเสก', @last_member_id, 6);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert4', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาย', ' พ.ต.ต.', 'ยศภัทร', 'ทรัพย์ศิลา', @last_member_id, 6);
+VALUES ('นาย', 'พ.ต.ต.', 'ยศภัทร', 'ทรัพย์ศิลา', @last_member_id, 6);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert5', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
@@ -403,7 +403,7 @@ INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert6', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาย', ' ร.ต.อ.', 'ชยพล', 'งามขวัญ', @last_member_id, 6);
+VALUES ('นาย', 'ร.ต.อ.', 'ชยพล', 'งามขวัญ', @last_member_id, 6);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert7', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
@@ -415,7 +415,7 @@ INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert8', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาง', ' ร.ต.ท.', 'กิรณา', 'สันติกสุล', @last_member_id, 6);
+VALUES ('นาง', 'ร.ต.ท.', 'กิรณา', 'สันติกสุล', @last_member_id, 6);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert9', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
