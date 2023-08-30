@@ -76,6 +76,19 @@ groupModel.getById = async (id: number): Promise<[] | null> => {
   return rows;
 };
 
+groupModel.getByDirectorId = async (id: number): Promise<[] | null> => {
+  const query = ` 
+  SELECT
+    g.group_id, g.group_name
+  FROM
+    GroupTable g
+  WHERE g.director_id = ?;
+      `;
+  const [rows] = await mysqlDB.query(query, [id]);
+  if (!rows) return null;
+  return rows;
+};
+
 groupModel.deleteGroupById = async (groupId: number): Promise<boolean> => {
   const query = `DELETE FROM GroupTable WHERE group_id=${groupId}`;
   const [rows] = await mysqlDB.query(query);

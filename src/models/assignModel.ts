@@ -156,7 +156,7 @@ assignModel.directorAcceptCaseAssign = async (data: any): Promise<any> => {
     const [result] = await connection.query(updateQuery, [case_id, groupId]);
 
     await connection.release();
-    if(result?.affectedRows === 0)  return null;
+    if (result?.affectedRows === 0) return null;
     return result;
   } catch (err) {
     throw err;
@@ -179,13 +179,50 @@ assignModel.directorCancelCaseAssign = async (data: any): Promise<any> => {
         a.group_id = NULL
     WHERE a.case_id = ? AND a.group_id = ?;
   `;
-  
-  const [result] = await connection.query(updateQuery, [case_id, groupId]);
-  
+
+    const [result] = await connection.query(updateQuery, [case_id, groupId]);
 
     await connection.release();
-    if(result?.affectedRows === 0)  return null;
+    if (result?.affectedRows === 0) return null;
     return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+assignModel.directorAssignEvidence = async (data: any): Promise<any> => {
+  try {
+    const { dataForAssign } = data;
+    const { expert_id, case_id, group_id } = dataForAssign;
+    const connection = await mysqlDB.getConnection();
+
+    const updateQuery = `
+        UPDATE Assign AS a
+        SET a.expert_id = ?
+        WHERE a.case_id = ? AND a.group_id = ?;
+      `;
+    await connection.query(updateQuery, [expert_id, case_id, group_id]);
+
+    await connection.release();
+    return "assign evidence success.";
+  } catch (err) {
+    throw err;
+  }
+};
+
+assignModel.countAssignEvidence = async (data: any): Promise<any> => {
+  try {
+    const { expertId } = data;
+    const connection = await mysqlDB.getConnection();
+
+    const countQuery = `
+        SELECT COUNT(expert_id) AS count FROM Assign WHERE expert_id = ? AND assign_evi_result IS NULL;
+      `;
+    const [count] = await connection.query(countQuery, [expertId]);
+
+    await connection.release();
+
+    return count ? count[0].count : null;
   } catch (err) {
     throw err;
   }
