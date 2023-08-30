@@ -57,6 +57,10 @@ import ListCaseAssign from "../controller/director/list-case-assign";
 import AcceptCase from "../controller/director/accept-case";
 import GetCaseAssignByCaseId from "../controller/director/getbyid-case-assign";
 import CancelCase from "../controller/director/cancel-case";
+import ListExpertByGroupId from "../controller/director/lise-expert";
+import AssignEvidence from "../controller/director/assign-evidence";
+import CountAssignEvidence from "../controller/director/count-assign-evidence";
+import GetGroupByDirectorId from "../controller/director/getbyid-group";
 
 const routerv1 = Router();
 
@@ -67,6 +71,7 @@ routerv1.route("/accesstoken").get(HandleAccessToken);
 routerv1.route("/profile").put(Auth, UpdateProfile);
 routerv1.route("/password").put(Auth, UpdatePassword);
 routerv1.route("/id").post(Auth, GetIdByRoleAndMemId);
+
 // admin
 routerv1.route("/checkUsername").post(CheckUsername);
 routerv1.route("/countMember").get(CountMember);
@@ -77,7 +82,7 @@ routerv1.route("/admin").post(Auth, CreateAdmin).get(Auth, ListAdmin).put(Auth,U
 routerv1.route("/commander").post(Auth,CreateCommander).get(Auth,ListCommander).put(Auth,UpdateCommander)
 routerv1.route("/director").post(Auth,CreateDirector).get(Auth,ListDirector).put(Auth,UpdateDirector)
 routerv1.route("/sceneInvestigator").post(Auth,CreateSceneInvestigator).get(Auth,ListSceneInvestigator).put(Auth,UpdateSceneInvestigator)
-routerv1.route("/expert").post(Auth,CreateExpert).get(Auth,ListExpert).put(Auth,UpdateExpert)
+routerv1.route("/expert").post(Auth,CreateExpert).get(Auth,ListExpert).put(Auth,UpdateExpert) //add in select expert when assign
 routerv1.route("/adminById/:memId").get(Auth,GetAdminById);
 routerv1.route("/commanderById/:memId").get(Auth,GetCommanderById);
 routerv1.route("/directorById/:memId").get(Auth,GetDirectorById);
@@ -90,13 +95,16 @@ routerv1.route("/typeEvidence").post(Auth, CreateTypeEvidence).get(Auth, ListTyp
 routerv1.route("/typeEvidenceById/:typeEId").get(Auth, GetTypeEvidenceById).delete(Auth, DeleteTypeEvidence)
 routerv1.route("/case").post(Auth, CreateCase).put(Auth, UpdateCase)
 routerv1.route("/caseByInvesId/:invesId").get(Auth, ListCaseById)
-routerv1.route("/caseByCaseId/:caseId").get(GetCaseById).delete(DeleteCase)
+routerv1.route("/caseByCaseId/:caseId").get(Auth, GetCaseById).delete(Auth, DeleteCase)
 
 //director
-routerv1.route("/caseByAssign/:direcId").get(ListCaseAssign)
-routerv1.route("/acceptCase").put(AcceptCase)
-routerv1.route("/cancelCase").put(CancelCase)
-routerv1.route("/caseAssignByCaseId").post(GetCaseAssignByCaseId)
-
+routerv1.route("/caseByAssign/:direcId").get(Auth, ListCaseAssign)
+routerv1.route("/acceptCase").put(Auth, AcceptCase)
+routerv1.route("/cancelCase").put(Auth, CancelCase)
+routerv1.route("/caseAssignByCaseId").post(Auth, GetCaseAssignByCaseId)
+routerv1.route("/expertByGroupId/:groupId").get(Auth, ListExpertByGroupId)
+routerv1.route("/assignEvidence").post(Auth, AssignEvidence)
+routerv1.route("/countAssignEvidence/:expertId").get(Auth, CountAssignEvidence)
+routerv1.route("/groupByDirectorId/:directorId").get(Auth, GetGroupByDirectorId)
 
 export default routerv1;
