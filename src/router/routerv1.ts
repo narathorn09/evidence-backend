@@ -62,6 +62,13 @@ import AssignEvidence from "../controller/director/assign-evidence";
 import CountAssignEvidence from "../controller/director/count-assign-evidence";
 import GetGroupByDirectorId from "../controller/director/getbyid-group";
 
+//expert
+import ListCaseByExpertId from "../controller/expert/list-case-assign";
+import AcceptWork from "../controller/expert/accept-work";
+import GetCaseByExpertIdAndCaseId from "../controller/expert/getbyid-case";
+import saveResultEvidence from "../controller/expert/save-result-evidence";
+
+
 const routerv1 = Router();
 
 routerv1.route("/me").get(GetMe);
@@ -106,5 +113,11 @@ routerv1.route("/expertByGroupId/:groupId").get(Auth, ListExpertByGroupId)
 routerv1.route("/assignEvidence").post(Auth, AssignEvidence)
 routerv1.route("/countAssignEvidence/:expertId").get(Auth, CountAssignEvidence)
 routerv1.route("/groupByDirectorId/:directorId").get(Auth, GetGroupByDirectorId)
+
+//expert
+routerv1.route("/caseByAssignByExpert/:expertId").get(Auth, ListCaseByExpertId)
+routerv1.route("/acceptWork").put(Auth, AcceptWork)
+routerv1.route("/caseAssignByExpertIdAndCaseId").post(Auth, GetCaseByExpertIdAndCaseId)
+routerv1.route("/saveResultEvidence").post(Auth, saveResultEvidence)
 
 export default routerv1;
