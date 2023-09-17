@@ -67,6 +67,7 @@ import ListCaseByExpertId from "../controller/expert/list-case-assign";
 import AcceptWork from "../controller/expert/accept-work";
 import GetCaseByExpertIdAndCaseId from "../controller/expert/getbyid-case";
 import saveResultEvidence from "../controller/expert/save-result-evidence";
+import ExpertCloseWork from "../controller/expert/close-work";
 
 
 const routerv1 = Router();
@@ -119,5 +120,6 @@ routerv1.route("/caseByAssignByExpert/:expertId").get(Auth, ListCaseByExpertId)
 routerv1.route("/acceptWork").put(Auth, AcceptWork)
 routerv1.route("/caseAssignByExpertIdAndCaseId").post(Auth, GetCaseByExpertIdAndCaseId)
 routerv1.route("/saveResultEvidence").post(Auth, saveResultEvidence)
+routerv1.route("/expertCloseWork").post(Auth, ExpertCloseWork)
 
 export default routerv1;
