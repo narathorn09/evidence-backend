@@ -22,6 +22,7 @@ assignModel.getCaseByAssignGroup = async (data: any): Promise<any> => {
                 c.case_type,
                 c.case_status,
                 c.inves_id,
+                c.case_summary_text,
                 JSON_ARRAYAGG(JSON_OBJECT(
                     'evidence_id', e.evidence_id,
                     'evidence_amount', e.evidence_amount,
@@ -38,6 +39,7 @@ assignModel.getCaseByAssignGroup = async (data: any): Promise<any> => {
                             'assign_direc_status', a.assign_direc_status,
                             'assign_evi_result', a.assign_evi_result,
                             'assign_exp_status', a.assign_exp_status,
+                            'assign_exp_close_work', a.assign_exp_close_work,
                             'case_id', a.case_id,
                             'group_id', a.group_id,
                             'expert_id', a.expert_id
@@ -90,6 +92,7 @@ assignModel.getCaseAssignByCaseId = async (data: any): Promise<any> => {
                 c.case_type,
                 c.case_status,
                 c.inves_id,
+                c.case_summary_text,
                 JSON_ARRAYAGG(JSON_OBJECT(
                     'evidence_id', e.evidence_id,
                     'evidence_amount', e.evidence_amount,
@@ -106,6 +109,7 @@ assignModel.getCaseAssignByCaseId = async (data: any): Promise<any> => {
                             'assign_direc_status', a.assign_direc_status,
                             'assign_evi_result', a.assign_evi_result,
                             'assign_exp_status', a.assign_exp_status,
+                            'assign_exp_close_work', a.assign_exp_close_work,
                             'case_id', a.case_id,
                             'group_id', a.group_id,
                             'expert_id', a.expert_id
@@ -154,6 +158,7 @@ assignModel.getCaseByExpertId = async (expertId: Number): Promise<any> => {
         c.case_type,
         c.case_status,
         c.inves_id,
+        c.case_summary_text,
         JSON_ARRAYAGG(JSON_OBJECT(
           'evidence_id', e.evidence_id,
           'evidence_amount', e.evidence_amount,
@@ -170,6 +175,7 @@ assignModel.getCaseByExpertId = async (expertId: Number): Promise<any> => {
               'assign_direc_status', a.assign_direc_status,
               'assign_evi_result', a.assign_evi_result,
               'assign_exp_status', a.assign_exp_status,
+              'assign_exp_close_work', a.assign_exp_close_work,
               'case_id', a.case_id,
               'group_id', a.group_id,
               'expert_id', a.expert_id
@@ -219,6 +225,7 @@ assignModel.getCaseByExpertIdAndCaseId = async (data: any): Promise<any> => {
         c.case_type,
         c.case_status,
         c.inves_id,
+        c.case_summary_text,
         JSON_ARRAYAGG(JSON_OBJECT(
           'evidence_id', e.evidence_id,
           'evidence_amount', e.evidence_amount,
@@ -235,6 +242,7 @@ assignModel.getCaseByExpertIdAndCaseId = async (data: any): Promise<any> => {
               'assign_direc_status', a.assign_direc_status,
               'assign_evi_result', a.assign_evi_result,
               'assign_exp_status', a.assign_exp_status,
+              'assign_exp_close_work', a.assign_exp_close_work,
               'case_id', a.case_id,
               'group_id', a.group_id,
               'expert_id', a.expert_id
@@ -366,13 +374,17 @@ assignModel.saveResultEvidence = async (data: any): Promise<any> => {
       result.evidence_factor.forEach(async (e: any) => {
         const updateQuery = `
         UPDATE Assign AS a
-        SET a.assign_evi_result = ?
+        SET a.assign_evi_result = ?, a.assign_exp_status = ?
         WHERE a.assign_id = ?;
       `;
-        await connection.query(updateQuery, [e.assign_evi_result, e.assignId]);
+        await connection.query(updateQuery, [
+          e.assign_evi_result,
+          e.assign_exp_status,
+          e.assignId,
+        ]);
       });
     });
-  
+
     await connection.release();
 
     if (resultEvidence?.length === 0) return null;
@@ -398,6 +410,39 @@ assignModel.expertAcceptWork = async (data: any): Promise<any> => {
     await connection.release();
     if (result?.affectedRows === 0) return null;
     return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+assignModel.expertCloseWork = async (data: any): Promise<any> => {
+  try {
+    const { listClose, case_id, case_summary_text } = data;
+    const connection = await mysqlDB.getConnection();
+
+    const updateCase = `
+        UPDATE CaseTable AS c
+        SET c.case_summary_text = ?
+        WHERE c.case_id = ?;
+      `;
+    await connection.query(updateCase, [case_summary_text, case_id]);
+
+    listClose.forEach(async (e: any) => {
+      const updateQuery = `
+        UPDATE Assign AS a
+        SET a.assign_exp_close_work = ?
+        WHERE a.assign_id = ?;
+      `;
+      await connection.query(updateQuery, [
+        e.assign_exp_close_work,
+        e.assign_id,
+      ]);
+    });
+
+    await connection.release();
+
+    if (listClose?.length === 0) return null;
+    return listClose;
   } catch (err) {
     throw err;
   }

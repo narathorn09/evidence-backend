@@ -94,7 +94,7 @@ caseModel.create = async (data: CaseData): Promise<any | null> => {
 
           result.push(resultEvidenceFactor);
 
-          const queryAssign = `INSERT INTO Assign (assign_direc_status, assign_evi_result, assign_exp_status, case_id, ef_id, group_id, expert_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          const queryAssign = `INSERT INTO Assign (assign_direc_status, assign_evi_result, assign_exp_status, case_id, ef_id, group_id, expert_id, assign_exp_close_work) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
           const assignData = [
             "0",
             null,
@@ -103,6 +103,7 @@ caseModel.create = async (data: CaseData): Promise<any | null> => {
             resultEvidenceFactor.insertId,
             ef.assignGroupId,
             null,
+            "0"
           ];
           const [resultAssign] = await connection.query(
             queryAssign,
@@ -229,7 +230,7 @@ caseModel.update = async (data: any): Promise<any | null> => {
 
             result.push(resultEvidenceFactor);
 
-            const queryAssign = `INSERT INTO Assign (assign_direc_status, assign_evi_result, assign_exp_status, case_id, ef_id, group_id, expert_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            const queryAssign = `INSERT INTO Assign (assign_direc_status, assign_evi_result, assign_exp_status, case_id, ef_id, group_id, expert_id, assign_exp_close_work) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
             const assignData = [
               "0",
               null,
@@ -238,6 +239,7 @@ caseModel.update = async (data: any): Promise<any | null> => {
               resultEvidenceFactor.insertId,
               ef.assignGroupId,
               null,
+              "0"
             ];
             const [resultAssign] = await connection.query(
               queryAssign,
@@ -287,7 +289,7 @@ caseModel.update = async (data: any): Promise<any | null> => {
 
               result.push(resultEvidenceFactor);
 
-              const queryAssign = `INSERT INTO Assign (assign_direc_status, assign_evi_result, assign_exp_status, case_id, ef_id, group_id, expert_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+              const queryAssign = `INSERT INTO Assign (assign_direc_status, assign_evi_result, assign_exp_status, case_id, ef_id, group_id, expert_id, assign_exp_close_work) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
               const assignData = [
                 "0",
                 null,
@@ -296,6 +298,7 @@ caseModel.update = async (data: any): Promise<any | null> => {
                 resultEvidenceFactor.insertId,
                 ef.assignGroupId,
                 null,
+                "0"
               ];
               const [resultAssign] = await connection.query(
                 queryAssign,
@@ -377,6 +380,7 @@ caseModel.getAllCaseByInvesId = async (
       c.case_type,
       c.case_status,
       c.inves_id,
+      c.case_summary_text,
       JSON_ARRAYAGG(JSON_OBJECT(
           'evidence_id', e.evidence_id,
           'evidence_amount', e.evidence_amount,
@@ -393,6 +397,7 @@ caseModel.getAllCaseByInvesId = async (
                   'assign_direc_status', a.assign_direc_status,
                   'assign_evi_result', a.assign_evi_result,
                   'assign_exp_status', a.assign_exp_status,
+                  'assign_exp_close_work', a.assign_exp_close_work,
                   'case_id', a.case_id,
                   'group_id', a.group_id,
                   'expert_id', a.expert_id
