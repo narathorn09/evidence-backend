@@ -96,6 +96,8 @@ CREATE TABLE CaseTable (
     case_location VARCHAR(255) NOT NULL,
     case_type VARCHAR(50) NOT NULL,
     case_status CHAR(1) NOT NULL,
+    -- detail after close work
+    case_summary_text VARCHAR(1000) NULL,
     inves_id INT NULL,
     PRIMARY KEY (case_id),
     FOREIGN KEY (inves_id) REFERENCES Scene_investigators(inves_id) ON UPDATE CASCADE ON DELETE SET NULL
@@ -132,6 +134,8 @@ CREATE TABLE Assign (
     assign_direc_status CHAR(1) NOT NULL,
     assign_evi_result VARCHAR(10) NULL,
     assign_exp_status CHAR(1) NOT NULL,
+    --  assign_exp_close_work , 0 for working, 1 for close work
+    assign_exp_close_work CHAR(1) NOT NULL,
     case_id INT NOT NULL,
     ef_id INT NOT NULL,
     group_id INT NULL,
