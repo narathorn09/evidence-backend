@@ -1,9 +1,13 @@
 # evidence-backend
 
-# step 1
-> yarn
-// for install all lib in package.json
+> step 1 For install all lib in package.json
 
-# step 2
-> yarn dev
-// for run backend
+```
+yarn
+```
+
+> step 2 For run backend
+
+```
+yarn dev
+```
