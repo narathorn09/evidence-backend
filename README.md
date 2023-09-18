@@ -6,4 +6,4 @@
 
 # step 2
 > yarn dev
-// for run front end
+// for run backend
