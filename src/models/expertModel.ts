@@ -161,4 +161,18 @@ expertModel.getById = async (id: number): Promise<[] | null> => {
   return rows;
 };
 
+expertModel.findById = async (id: number): Promise<[] | null> => {
+  const query = ` 
+  SELECT
+    e.expert_nametitle, e.expert_rank,
+    e.expert_fname, e.expert_lname
+  FROM
+    Expert e 
+  WHERE e.expert_id = ? 
+      `;
+  const [rows] = await mysqlDB.query(query, [id, id]);
+  if (!rows) return null;
+  return rows;
+};
+
 export default expertModel;

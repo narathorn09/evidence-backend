@@ -448,4 +448,30 @@ assignModel.expertCloseWork = async (data: any): Promise<any> => {
   }
 };
 
+assignModel.directorConfirmCase = async (data: any): Promise<any> => {
+  try {
+    const { listIdEfConfirm } = data;
+    const connection = await mysqlDB.getConnection();
+
+    listIdEfConfirm.forEach(async (e: any) => {
+      const updateQuery = `
+        UPDATE Evidence_Factor AS ef
+        SET ef.ef_status = ?
+        WHERE ef.ef_id = ?;
+    `;
+      await connection.query(updateQuery, [
+        '3',
+        e.ef_id,
+      ]);
+    });
+
+    await connection.release();
+
+    if (listIdEfConfirm?.length === 0) return null;
+    return listIdEfConfirm;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export default assignModel;

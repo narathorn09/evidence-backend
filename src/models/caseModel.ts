@@ -103,7 +103,7 @@ caseModel.create = async (data: CaseData): Promise<any | null> => {
             resultEvidenceFactor.insertId,
             ef.assignGroupId,
             null,
-            "0"
+            "0",
           ];
           const [resultAssign] = await connection.query(
             queryAssign,
@@ -239,7 +239,7 @@ caseModel.update = async (data: any): Promise<any | null> => {
               resultEvidenceFactor.insertId,
               ef.assignGroupId,
               null,
-              "0"
+              "0",
             ];
             const [resultAssign] = await connection.query(
               queryAssign,
@@ -298,7 +298,7 @@ caseModel.update = async (data: any): Promise<any | null> => {
                 resultEvidenceFactor.insertId,
                 ef.assignGroupId,
                 null,
-                "0"
+                "0",
               ];
               const [resultAssign] = await connection.query(
                 queryAssign,
@@ -489,6 +489,27 @@ caseModel.deleteById = async (case_id: number): Promise<boolean> => {
     const [result] = await connection.query(query);
     await connection.release();
     return result ? true : false;
+  } catch (err) {
+    throw err;
+  }
+};
+
+caseModel.updateCaseStatus = async (data: any): Promise<any> => {
+  try {
+    const { case_id, case_status } = data;
+    const connection = await mysqlDB.getConnection();
+
+    const updateQuery = `
+        UPDATE CaseTable AS c
+        SET c.case_status = ?
+        WHERE c.case_id = ?;
+    `;
+    const response = await connection.query(updateQuery, [case_status, case_id]);
+
+    await connection.release();
+
+    if (!response) return null;
+    return response;
   } catch (err) {
     throw err;
   }

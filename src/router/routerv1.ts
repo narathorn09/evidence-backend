@@ -51,6 +51,7 @@ import ListCaseById from "../controller/sceneInvestigator/listCaseById-case";
 import GetCaseById from "../controller/sceneInvestigator/getbyid-case";
 import UpdateCase from "../controller/sceneInvestigator/update-case";
 import DeleteCase from "../controller/sceneInvestigator/delete-case";
+import UpdateCaseStatus from "../controller/sceneInvestigator/update-case-status";
 
 //director
 import ListCaseAssign from "../controller/director/list-case-assign";
@@ -61,6 +62,8 @@ import ListExpertByGroupId from "../controller/director/lise-expert";
 import AssignEvidence from "../controller/director/assign-evidence";
 import CountAssignEvidence from "../controller/director/count-assign-evidence";
 import GetGroupByDirectorId from "../controller/director/getbyid-group";
+import DirectorConfirmCase from "../controller/director/confirm-case";
+import GetExpertDetailByExpertId from "../controller/director/getbyid-expert-detail";
 
 //expert
 import ListCaseByExpertId from "../controller/expert/list-case-assign";
@@ -68,7 +71,6 @@ import AcceptWork from "../controller/expert/accept-work";
 import GetCaseByExpertIdAndCaseId from "../controller/expert/getbyid-case";
 import saveResultEvidence from "../controller/expert/save-result-evidence";
 import ExpertCloseWork from "../controller/expert/close-work";
-
 
 const routerv1 = Router();
 
@@ -104,6 +106,7 @@ routerv1.route("/typeEvidenceById/:typeEId").get(Auth, GetTypeEvidenceById).dele
 routerv1.route("/case").post(Auth, CreateCase).put(Auth, UpdateCase)
 routerv1.route("/caseByInvesId/:invesId").get(Auth, ListCaseById)
 routerv1.route("/caseByCaseId/:caseId").get(Auth, GetCaseById).delete(Auth, DeleteCase)
+routerv1.route("/caseStatusByCaseId").put(Auth, UpdateCaseStatus)
 
 //director
 routerv1.route("/caseByAssign/:direcId").get(Auth, ListCaseAssign)
@@ -114,6 +117,8 @@ routerv1.route("/expertByGroupId/:groupId").get(Auth, ListExpertByGroupId)
 routerv1.route("/assignEvidence").post(Auth, AssignEvidence)
 routerv1.route("/countAssignEvidence/:expertId").get(Auth, CountAssignEvidence)
 routerv1.route("/groupByDirectorId/:directorId").get(Auth, GetGroupByDirectorId)
+routerv1.route("/confirmCase").put(Auth, DirectorConfirmCase)
+routerv1.route("/detailExpertById/:expertId").get(Auth, GetExpertDetailByExpertId)
 
 //expert
 routerv1.route("/caseByAssignByExpert/:expertId").get(Auth, ListCaseByExpertId)
