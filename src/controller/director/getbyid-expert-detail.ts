@@ -33,7 +33,7 @@ const GetExpertDetailByExpertId = async (
     const result = rows.filter((row: any) => {
       return row.evidence_list.every((evidence: any) => {
         return evidence.evidence_factor.every((factor: any) => {
-          return factor.assign_exp_close_work === "0";
+          return factor.assign_exp_close_work === "0" && factor.assign_exp_status !== "0";
         });
       });
     });
