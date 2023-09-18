@@ -504,12 +504,81 @@ caseModel.updateCaseStatus = async (data: any): Promise<any> => {
         SET c.case_status = ?
         WHERE c.case_id = ?;
     `;
-    const response = await connection.query(updateQuery, [case_status, case_id]);
+    const response = await connection.query(updateQuery, [
+      case_status,
+      case_id,
+    ]);
 
     await connection.release();
 
     if (!response) return null;
     return response;
+  } catch (err) {
+    throw err;
+  }
+};
+
+caseModel.getAllCase = async (): Promise<any | null> => {
+  try {
+    const connection = await mysqlDB.getConnection();
+    try {
+      const query = `
+      SELECT 
+      c.case_id,
+      c.case_numboko,
+      c.case_save_date,
+      c.case_save_time,
+      c.case_accident_date,
+      c.case_accident_time,
+      c.case_location,
+      c.case_type,
+      c.case_status,
+      c.inves_id,
+      c.case_summary_text,
+      JSON_ARRAYAGG(JSON_OBJECT(
+          'evidence_id', e.evidence_id,
+          'evidence_amount', e.evidence_amount,
+          'case_id', e.case_id,
+          'type_e_id', e.type_e_id,
+          'evidence_factor', (
+              SELECT JSON_ARRAYAGG(JSON_OBJECT(
+                  'ef_id', ef.ef_id,
+                  'ef_photo', ef.ef_photo,
+                  'ef_detail', ef.ef_detail,
+                  'ef_status', ef.ef_status,
+                  'evidence_id', ef.evidence_id,
+                  'assign_id', a.assign_id,
+                  'assign_direc_status', a.assign_direc_status,
+                  'assign_evi_result', a.assign_evi_result,
+                  'assign_exp_status', a.assign_exp_status,
+                  'assign_exp_close_work', a.assign_exp_close_work,
+                  'case_id', a.case_id,
+                  'group_id', a.group_id,
+                  'expert_id', a.expert_id
+              ))
+              FROM Evidence_Factor ef
+              LEFT JOIN Assign a ON ef.ef_id = a.ef_id
+              WHERE ef.evidence_id = e.evidence_id AND a.case_id = c.case_id 
+          )
+      )) AS evidence_list
+    FROM CaseTable c
+    LEFT JOIN Evidence e ON c.case_id = e.case_id
+    WHERE EXISTS (
+        SELECT 1
+        FROM Evidence_Factor ef
+        LEFT JOIN Assign a ON ef.ef_id = a.ef_id
+        WHERE ef.evidence_id = e.evidence_id
+    ) 
+    GROUP BY c.case_id;
+      `;
+      const [result] = await connection.query(query);
+
+      await connection.release();
+      return result || null;
+    } catch (err) {
+      await connection.release();
+      throw err;
+    }
   } catch (err) {
     throw err;
   }
