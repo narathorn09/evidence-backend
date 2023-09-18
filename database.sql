@@ -54,6 +54,7 @@ CREATE TABLE Director (
 CREATE TABLE GroupTable (
     group_id INT AUTO_INCREMENT,
     group_name VARCHAR(50) NOT NULL,
+    group_status CHAR(1) NOT NULL,
     director_id INT NULL,
     PRIMARY KEY (group_id),
     FOREIGN KEY (director_id) REFERENCES Director(director_id) ON UPDATE CASCADE ON DELETE SET NULL
@@ -92,9 +93,11 @@ CREATE TABLE CaseTable (
     case_save_time TIME NOT NULL,
     case_accident_date DATE NOT NULL,
     case_accident_time TIME NOT NULL,
-    case_location VARCHAR(150) NOT NULL,
+    case_location VARCHAR(255) NOT NULL,
     case_type VARCHAR(50) NOT NULL,
     case_status CHAR(1) NOT NULL,
+    -- detail after close work
+    case_summary_text VARCHAR(1000) NULL,
     inves_id INT NULL,
     PRIMARY KEY (case_id),
     FOREIGN KEY (inves_id) REFERENCES Scene_investigators(inves_id) ON UPDATE CASCADE ON DELETE SET NULL
@@ -118,8 +121,8 @@ CREATE TABLE Evidence (
 
 CREATE TABLE Evidence_Factor (
     ef_id INT AUTO_INCREMENT,
-    ef_photo VARCHAR(20) NOT NULL,
-    ef_detail VARCHAR(150) NULL,
+    ef_photo VARCHAR(50) NULL,
+    ef_detail VARCHAR(255) NULL,
     ef_status CHAR(1) NOT NULL,
     evidence_id INT NULL,
     PRIMARY KEY (ef_id),
@@ -129,17 +132,36 @@ CREATE TABLE Evidence_Factor (
 CREATE TABLE Assign (
     assign_id INT AUTO_INCREMENT,
     assign_direc_status CHAR(1) NOT NULL,
-    assign_evi_result VARCHAR(10) NOT NULL,
+    assign_evi_result VARCHAR(10) NULL,
     assign_exp_status CHAR(1) NOT NULL,
-    evidence_id INT NOT NULL,
-    group_id INT NOT NULL,
+    --  assign_exp_close_work , 0 for working, 1 for close work
+    assign_exp_close_work CHAR(1) NOT NULL,
+    case_id INT NOT NULL,
+    ef_id INT NOT NULL,
+    group_id INT NULL,
     expert_id INT NULL,
     PRIMARY KEY (assign_id),
-    FOREIGN KEY (evidence_id) REFERENCES Evidence(evidence_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (case_id) REFERENCES CaseTable(case_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (ef_id) REFERENCES Evidence_Factor(ef_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES GroupTable(group_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (expert_id) REFERENCES Expert(expert_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+-- Adding a Type Evidence
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('ขวดน้ำ');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('แก้วน้ำ');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('เสื้อ');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('กางเกง');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('กระเป๋า');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('มีด');
+INSERT INTO Type_Evidence (type_e_name)
+VALUES ('ปากกา');
 
 -- Adding a Director
 INSERT INTO Member (mem_type, mem_username, mem_password)
@@ -203,14 +225,15 @@ INSERT INTO Director (director_nametitle, director_rank, director_fname, directo
 VALUES ('นาย', 'พ.ต.อ', 'วีรชัย', 'วงศ์ทิพย์', @last_member_id);
 
 -- Adding a Group
-INSERT INTO GroupTable (group_name, director_id)
-VALUES ('กลุ่มงานตรวจสถานที่เกิดเหตุ', 1),
-       ('กลุ่มงานตรวจอาวุธปืนและเครื่องกระสุน', NULL),
-       ('กลุ่มงานตรวจยาเสพติด', NULL),
-       ('กลุ่มงานตรวจลายนิ้วมือแฝง', NULL),
-       ('กลุ่มงานตรวจพิสูจน์ทางเคมีฟิสิกส์', NULL),
-       ('กลุ่มงานตรวจชีววิทยาและดีเอ็นเอ', 2),
-       ('กลุ่มงานผู้เชี่ยวชาญ', NULL);
+-- 0 เปิดกลุ่มงาน, 1 ปิดกลุ่มงาน
+INSERT INTO GroupTable (group_name, director_id, group_status)
+VALUES ('กลุ่มงานตรวจสถานที่เกิดเหตุ', 1, '0'),
+       ('กลุ่มงานตรวจอาวุธปืนและเครื่องกระสุน', NULL, '1'),
+       ('กลุ่มงานตรวจยาเสพติด', NULL, '1'),
+       ('กลุ่มงานตรวจลายนิ้วมือแฝง', NULL, '1'),
+       ('กลุ่มงานตรวจพิสูจน์ทางเคมีฟิสิกส์', NULL, '1'),
+       ('กลุ่มงานตรวจชีววิทยาและดีเอ็นเอ', 2, '0'),
+       ('กลุ่มงานผู้เชี่ยวชาญ', NULL, '1');
 
 -- Adding a Admin
 INSERT INTO Member (mem_type, mem_username, mem_password)
@@ -366,13 +389,13 @@ INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert3', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาย', ' ร.ต.ท.', 'ธนิตย์', 'อุดมเสก', @last_member_id, 6);
+VALUES ('นาย', 'ร.ต.ท.', 'ธนิตย์', 'อุดมเสก', @last_member_id, 6);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert4', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาย', ' พ.ต.ต.', 'ยศภัทร', 'ทรัพย์ศิลา', @last_member_id, 6);
+VALUES ('นาย', 'พ.ต.ต.', 'ยศภัทร', 'ทรัพย์ศิลา', @last_member_id, 6);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert5', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
@@ -384,7 +407,7 @@ INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert6', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาย', ' ร.ต.อ.', 'ชยพล', 'งามขวัญ', @last_member_id, 6);
+VALUES ('นาย', 'ร.ต.อ.', 'ชยพล', 'งามขวัญ', @last_member_id, 6);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert7', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
@@ -396,7 +419,7 @@ INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert8', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');
 SET @last_member_id = LAST_INSERT_ID();
 INSERT INTO Expert (expert_nametitle, expert_rank, expert_fname, expert_lname, mem_id, group_id)
-VALUES ('นาง', ' ร.ต.ท.', 'กิรณา', 'สันติกสุล', @last_member_id, 6);
+VALUES ('นาง', 'ร.ต.ท.', 'กิรณา', 'สันติกสุล', @last_member_id, 6);
 
 INSERT INTO Member (mem_type, mem_username, mem_password)
 VALUES ('4', 'expert9', '$2a$10$F3EH9p.HgXgR4IExPsMvdOt0XoGsFZKGiR0ojh3YruNs1J01sdFam');

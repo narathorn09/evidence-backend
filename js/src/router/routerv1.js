@@ -47,6 +47,9 @@ const list_typeEvidence_1 = __importDefault(require("../controller/sceneInvestig
 const delete_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/delete-typeEvidence"));
 const getbyid_typeEvidence_1 = __importDefault(require("../controller/sceneInvestigator/getbyid-typeEvidence"));
 const getId_1 = __importDefault(require("../controller/me/getId"));
+const create_case_1 = __importDefault(require("../controller/sceneInvestigator/create-case"));
+const listCaseById_case_1 = __importDefault(require("../controller/sceneInvestigator/listCaseById-case"));
+const getbyid_case_1 = __importDefault(require("../controller/sceneInvestigator/getbyid-case"));
 const routerv1 = (0, express_1.Router)();
 routerv1.route("/me").get(controller_2.default);
 routerv1.route("/login").post(controller_4.default);
@@ -61,7 +64,7 @@ routerv1.route("/countMember").get(count_member_1.default);
 routerv1.route("/countGroup").get(count_groups_1.default);
 routerv1.route("/group").post(auth_1.default, create_group_1.default).get(auth_1.default, list_group_1.default).put(auth_1.default, update_group_1.default);
 routerv1.route("/groupById/:groupId").get(auth_1.default, getbyid_group_1.default).delete(auth_1.default, delete_group_1.default);
-routerv1.route("/admin").post(create_admin_1.default).get(auth_1.default, list_admin_1.default).put(auth_1.default, update_admin_1.default);
+routerv1.route("/admin").post(auth_1.default, create_admin_1.default).get(auth_1.default, list_admin_1.default).put(auth_1.default, update_admin_1.default);
 routerv1.route("/commander").post(auth_1.default, create_commander_1.default).get(auth_1.default, list_commander_1.default).put(auth_1.default, update_commander_1.default);
 routerv1.route("/director").post(auth_1.default, create_director_1.default).get(auth_1.default, list_director_1.default).put(auth_1.default, update_director_1.default);
 routerv1.route("/sceneInvestigator").post(auth_1.default, create_scene_investigators_1.default).get(auth_1.default, list_scene_investigators_1.default).put(auth_1.default, update_scene_investigators_1.default);
@@ -75,4 +78,7 @@ routerv1.route("/memberById/:memId").delete(auth_1.default, delete_member_1.defa
 //scene Investigator
 routerv1.route("/typeEvidence").post(auth_1.default, create_typeEvidence_1.default).get(auth_1.default, list_typeEvidence_1.default).put(auth_1.default, update_typeEvidence_1.default);
 routerv1.route("/typeEvidenceById/:typeEId").get(auth_1.default, getbyid_typeEvidence_1.default).delete(auth_1.default, delete_typeEvidence_1.default);
+routerv1.route("/case").post(auth_1.default, create_case_1.default);
+routerv1.route("/caseByInvesId/:invesId").get(auth_1.default, listCaseById_case_1.default);
+routerv1.route("/caseByCaseId/:caseId").get(getbyid_case_1.default);
 exports.default = routerv1;

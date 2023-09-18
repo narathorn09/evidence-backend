@@ -124,6 +124,23 @@ expertModel.getAll = async (): Promise<[] | null> => {
   return rows;
 };
 
+expertModel.getAllByGroupId = async (groupId: number): Promise<[] | null> => {
+  const query = ` 
+    SELECT
+        e.expert_id, e.expert_nametitle, e.expert_rank,
+        e.expert_fname, e.expert_lname,
+        e.group_id, g.group_name
+    FROM
+        Expert e 
+    LEFT JOIN
+        GroupTable g ON g.group_id = e.group_id
+    WHERE e.group_id = ?;
+  `;
+  const [rows] = await mysqlDB.query(query, [groupId]);
+  if(!rows) return null
+  return rows;
+};
+
 expertModel.getById = async (id: number): Promise<[] | null> => {
   const query = ` 
   SELECT
@@ -138,6 +155,20 @@ expertModel.getById = async (id: number): Promise<[] | null> => {
   LEFT JOIN
     GroupTable g ON g.group_id = e.group_id
   WHERE m.mem_id = ? AND e.mem_id = ?;
+      `;
+  const [rows] = await mysqlDB.query(query, [id, id]);
+  if (!rows) return null;
+  return rows;
+};
+
+expertModel.findById = async (id: number): Promise<[] | null> => {
+  const query = ` 
+  SELECT
+    e.expert_nametitle, e.expert_rank,
+    e.expert_fname, e.expert_lname
+  FROM
+    Expert e 
+  WHERE e.expert_id = ? 
       `;
   const [rows] = await mysqlDB.query(query, [id, id]);
   if (!rows) return null;
