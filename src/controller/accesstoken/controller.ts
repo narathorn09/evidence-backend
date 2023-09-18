@@ -28,16 +28,19 @@ const HandleAccessToken = async (
     // console.log("findUserByToken",findUserByToken)
 
     if (!findUserByToken) {
-      const decoded = await jwt.verify(refreshToken, secret);
-      if (!decoded)
-        return res.status(403).json({
-          status: 403,
-          code: "Forbidden",
-          message: "Forbidden",
-        });
-      const hackedUser = await userModel.getUserByUsername(decoded.username);
-      const { mem_id } = hackedUser;
-      await refreshTokenModel.updateTokenById(mem_id, null);
+      // const decoded = await jwt.verify(refreshToken, secret);
+      // if (!decoded)
+      //   return res.status(403).json({
+      //     status: 403,
+      //     code: "Forbidden",
+      //     message: "Forbidden",
+      //   });
+      // const hackedUser = await userModel.getUserByUsername(decoded.username);
+      // const { mem_id } = hackedUser;
+      // await refreshTokenModel.updateTokenById(mem_id, null);
+      // Remove the cookie by setting its expiration date to the past
+      res.cookie('refresh', '', { expires: new Date(0) });
+
       return res.status(403).json({
         status: 403,
         code: "Forbidden",
