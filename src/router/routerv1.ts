@@ -136,7 +136,7 @@ routerv1.route("/acceptWork").put(Auth, AcceptWork)
 routerv1.route("/caseAssignByExpertIdAndCaseId").post(Auth, GetCaseByExpertIdAndCaseId)
 routerv1.route("/saveResultEvidence").post(Auth, saveResultEvidence)
 routerv1.route("/expertCloseWork").post(Auth, ExpertCloseWork)
-routerv1.route("/d/:expertId").get(Auth, CountCaseExpert)
+routerv1.route("/countCaseExpert/:expertId").get(Auth, CountCaseExpert)
 
 //commander
 routerv1.route("/caseAll").get(Auth, ListCaseAll)
