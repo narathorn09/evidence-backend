@@ -115,7 +115,7 @@ caseModel.create = async (data: CaseData): Promise<any | null> => {
         });
       });
 
-      console.log("result", result);
+      // console.log("result", result);
       await connection.commit();
       connection.release();
       return result || null;
