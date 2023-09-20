@@ -91,12 +91,12 @@ const CountCaseDirector = async (
       .flat().length;
     
       
-    console.log("group", group);
-    console.log("countExpert", countExpert);
-    console.log("countCaseAll", countCaseAll);
-    console.log("countCaseAssign", countCaseAssign);
-    console.log("countCaseAccept", countCaseAccept);
-    console.log("countCaseConfirm", countCaseConfirm);
+    // console.log("group", group);
+    // console.log("countExpert", countExpert);
+    // console.log("countCaseAll", countCaseAll);
+    // console.log("countCaseAssign", countCaseAssign);
+    // console.log("countCaseAccept", countCaseAccept);
+    // console.log("countCaseConfirm", countCaseConfirm);
 
 
     res.status(200).send({countCaseAll, countCaseAssign, countCaseAccept, countCaseConfirm, countCaseConfirmed});

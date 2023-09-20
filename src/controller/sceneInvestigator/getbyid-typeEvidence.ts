@@ -5,7 +5,7 @@ import typeEvidenceModel from "../../models/typeEvidenceModel";
 const GetTypeEvidenceById = async (req: Request, res: Response, next: NextFunction) => {
   try {
    const { typeEId } = req.params;
-   console.log("Request",req.params)
+  //  console.log("Request",req.params)
    const typeEvidence = await typeEvidenceModel.getById(typeEId)
       if (!typeEvidence) {
         return res.status(500).json({

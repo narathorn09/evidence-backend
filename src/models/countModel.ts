@@ -74,7 +74,7 @@ countModel.countCaseClose = async (): Promise<number> => {
 countModel.countCaseAllByInvesId = async (invesId: number): Promise<number> => {
   const query = `SELECT COUNT(case_id) AS caseCount FROM CaseTable WHERE inves_id = ?;`;
   const [result] = await mysqlDB.query(query, [invesId]);
-  console.log(result);
+  // console.log(result);
   
   const count = result[0]?.caseCount ?? 0;
   return count;

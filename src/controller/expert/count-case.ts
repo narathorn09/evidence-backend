@@ -63,10 +63,10 @@ const CountCaseExpert = async (
       .filter((e: any) => e !== null)
       .flat().length;
 
-    console.log("countCaseAll", countCaseAll);
-    console.log("countCaseAssign", countCaseAssign);
-    console.log("countCaseClose", countCaseClose);
-    console.log("countCaseWork", countCaseWork);
+    // console.log("countCaseAll", countCaseAll);
+    // console.log("countCaseAssign", countCaseAssign);
+    // console.log("countCaseClose", countCaseClose);
+    // console.log("countCaseWork", countCaseWork);
 
     res
       .status(200)
