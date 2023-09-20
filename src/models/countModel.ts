@@ -44,10 +44,48 @@ countModel.countAllUser = async (): Promise<any> => {
 };
 
 countModel.countGroup = async (): Promise<number> => {
-    const queryGroup = `SELECT COUNT(group_id) AS groupCount FROM GroupTable`;
-    const [result] = await mysqlDB.query(queryGroup);
-    const count = result[0]?.groupCount ?? 0;
-    return count;
+  const queryGroup = `SELECT COUNT(group_id) AS groupCount FROM GroupTable`;
+  const [result] = await mysqlDB.query(queryGroup);
+  const count = result[0]?.groupCount ?? 0;
+  return count;
+};
+
+countModel.countCaseAll = async (): Promise<number> => {
+  const query = `SELECT COUNT(case_id) AS caseCount FROM CaseTable;`;
+  const [result] = await mysqlDB.query(query);
+  const count = result[0]?.caseCount ?? 0;
+  return count;
+};
+
+countModel.countCaseWork = async (): Promise<number> => {
+  const query = `SELECT COUNT(case_id) AS caseCount FROM CaseTable WHERE case_status != "2";`;
+  const [result] = await mysqlDB.query(query);
+  const count = result[0]?.caseCount ?? 0;
+  return count;
+};
+
+countModel.countCaseClose = async (): Promise<number> => {
+  const query = `SELECT COUNT(case_id) AS caseCount FROM CaseTable WHERE case_status = "2";`;
+  const [result] = await mysqlDB.query(query);
+  const count = result[0]?.caseCount ?? 0;
+  return count;
+};
+
+countModel.countCaseAllByInvesId = async (invesId: number): Promise<number> => {
+  const query = `SELECT COUNT(case_id) AS caseCount FROM CaseTable WHERE inves_id = ?;`;
+  const [result] = await mysqlDB.query(query, [invesId]);
+  console.log(result);
+  
+  const count = result[0]?.caseCount ?? 0;
+  return count;
+};
+
+countModel.countCaseByInvesId = async (data: any): Promise<number> => {
+  const { invesId, caseStatus } = data;
+  const query = `SELECT COUNT(case_id) AS caseCount FROM CaseTable WHERE inves_id = ? AND case_status = ?;`;
+  const [result] = await mysqlDB.query(query, [invesId, caseStatus]);
+  const count = result[0]?.caseCount ?? 0;
+  return count;
 };
 
 export default countModel;
