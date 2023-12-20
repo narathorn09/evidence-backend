@@ -41,9 +41,9 @@ const Login = async (req: Request, res: Response) => {
       else await refreshTokenModel.createTokenById(mem_id, newRefreshToken);
 
       res.cookie("refresh", newRefreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        // httpOnly: true,
+        // secure: true,
+        // sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
       });
 
