@@ -10,9 +10,9 @@ const Logout = async (req: Request, res: Response, next: NextFunction) => {
     const getLogout = await userModel.logout(refreshToken);
     if (getLogout) {
       res.clearCookie("refresh", {
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
+        // httpOnly: true,
+        // sameSite: "none",
+        // secure: true,
       });
       return res.status(200).json({
         status: 200,
